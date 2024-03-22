@@ -1,4 +1,4 @@
-from scrapers.theprotocol import scraper
+from scrapers.useme import scraper
 
 def main() -> None:
     scraper()
