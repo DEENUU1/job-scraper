@@ -1,4 +1,4 @@
-from scrapers.useme import scraper
+from scrapers.bulldogjob import scraper
 
 def main() -> None:
     scraper()
