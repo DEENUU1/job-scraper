@@ -1,30 +1,33 @@
 import requests
 from bs4 import BeautifulSoup
+from .abc.scraper_strategy import ScraperStrategy
 
 
-def scraper() -> None:
-    page_num = 1
+class BulldogJob(ScraperStrategy):
 
-    offers = []
+    def scrape(self, url: str) -> None:
+        page_num = 1
 
-    while True:
-        base_url = f"https://bulldogjob.pl/companies/jobs/s/order,published,desc/page,{page_num}"
+        offers = []
 
-        response = requests.get(base_url)
+        while True:
+            base_url = f"{url}{page_num}"
 
-        soup = BeautifulSoup(response.text, "html.parser")
+            response = requests.get(base_url)
 
-        job_offers = soup.find_all("a", class_="JobListItem_item__M79JI")
+            soup = BeautifulSoup(response.text, "html.parser")
 
-        if not job_offers:
-            break
+            job_offers = soup.find_all("a", class_="JobListItem_item__M79JI")
 
-        if job_offers:
-            page_num += 1
+            if not job_offers:
+                break
 
-        for offer in job_offers:
-            title = offer.find("h3")
+            if job_offers:
+                page_num += 1
 
-            if title:
-                print(title.text)
-                offers.append({"title": title.text})
+            for offer in job_offers:
+                title = offer.find("h3")
+
+                if title:
+                    print(title.text)
+                    offers.append({"title": title.text})
