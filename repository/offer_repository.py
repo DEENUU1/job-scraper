@@ -38,16 +38,17 @@ class OfferRepository:
 
     def get_offers_by_website_id(
             self,
-            website_id: UUID4,
             sort: SortEnum = SortEnum.NEWEST,
+            website_id: Optional[UUID4] = None,
             archived: bool = False,
             query: Optional[str] = None,
             status: Optional[StatusEnum] = None,
     ) -> List[OfferOutput]:
 
-        offers = self.session.query(Offer)
+        offers = self.session.query(Offer)#.filter(Offer.archived == archived)
 
-        offers = offers.filter(Offer.website_id == website_id).filter(Offer.archived == archived)
+        if website_id:
+            offers = offers.filter(Offer.website_id == website_id)
 
         if sort == SortEnum.OLDEST:
             offers = offers.order_by(asc(Offer.created_at))

@@ -22,17 +22,17 @@ class OfferService:
 
         return self.offer_repository.create(offer_input, website_id)
 
-    def get_offers_by_website_id(
+    def get_offers(
             self,
-            website_id: UUID4,
             sort: SortEnum = SortEnum.NEWEST,
+            website_id: Optional[UUID4] = None,
             archived: bool = False,
             query: Optional[str] = None,
             status: Optional[StatusEnum] = None
     ) -> List[OfferOutput]:
         return self.offer_repository.get_offers_by_website_id(
-            website_id,
             sort,
+            website_id,
             archived,
             query,
             status

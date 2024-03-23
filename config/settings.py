@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    title: str = "JobScraper"
+    TITLE: str = "JobScraper"
 
 
 settings = Settings()

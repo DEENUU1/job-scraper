@@ -1,59 +1,60 @@
-from flet import (
-    Page,
-    RouteChangeEvent,
-    View,
-    AppBar,
-    Text,
-    ElevatedButton,
-    MainAxisAlignment,
-    CrossAxisAlignment,
-    ViewPopEvent
-)
-from .pages.home import Home
+from typing import List
+
+import flet as ft
+
+from config.settings import settings
+from services.offer_service import OfferService
+from config.database import get_db
 
 
-def app(page: Page) -> None:
-    page.title = "Flet App"
+STATUS_OPTIONS = [
+    "NEW",
+    "APPLICATION_SENT",
+    "REJECTED",
+    "IN_PROGRESS",
+    "APPROVED"
+]
 
-    def route_change(e: RouteChangeEvent) -> None:
-        page.views.clear()
 
-        if page.route == "/":
-            home_view = Home(page)
-            page.views.append(
-                View(
-                    route="/",
-                    controls=[
-                        AppBar(title=Text("Home")),
-                        home_view,
-                        ElevatedButton(text="Go to store", on_click=lambda _: page.go("/store"))
-                    ],
-                    vertical_alignment=MainAxisAlignment.CENTER,
-                    horizontal_alignment=CrossAxisAlignment.CENTER,
-                    spacing=26
-                )
+def get_options() -> List[ft.dropdown.Option]:
+    result = []
+    for status in STATUS_OPTIONS:
+        result.append(ft.dropdown.Option(status))
+    return result
+
+
+def app(page: ft.Page) -> None:
+    page.title = settings.TITLE
+
+    session = next(get_db())
+    offer_service = OfferService(session)
+
+    offers = offer_service.get_offers()
+    options = get_options()
+    lv = ft.ListView(expand=1, spacing=10, padding=20)
+
+    for offer in offers:
+
+        lv.controls.append(
+            ft.Row(
+                controls=[
+                    ft.Container(
+                        content=ft.Checkbox(value=offer.archived, on_change=offer_service.update_archive(offer.id))
+                    ),
+                    ft.Container(
+                        content=ft.Text(offer.title),
+                    ),
+                    ft.Container(
+                        content=ft.Dropdown(
+                            width=150,
+                            hint_text=offer.status,
+                            options=options
+                        ),
+                    ),
+                    ft.Container(
+                        content=ft.Text(str(offer.created_at)),
+                    )
+                ]
             )
-        elif page.route == "/store":
-            page.views.append(
-                View(
-                    route="/store",
-                    controls=[
-                        AppBar(title=Text("Store")),
-                        Text("Welcome to the store!"),
-                        ElevatedButton(text="Go home", on_click=lambda _: page.go("/"))
-                    ],
-                    vertical_alignment=MainAxisAlignment.CENTER,
-                    horizontal_alignment=CrossAxisAlignment.CENTER,
-                    spacing=26
-                )
-            )
-        page.update()
-
-    def view_pop(e: ViewPopEvent) -> None:
-        page.views.pop()
-        top_view: View = page.views[-1]
-        page.go(top_view.route)
-
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
-    page.go(page.route)
+        )
+    page.add(lv)
