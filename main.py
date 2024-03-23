@@ -1,4 +1,4 @@
-from scrapers.pracujpl import scraper
+from scrapers.justjoinit import scraper
 
 def main() -> None:
     scraper()
