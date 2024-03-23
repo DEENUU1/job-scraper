@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, UUID, String, Boolean, ForeignKey
+from sqlalchemy import Column, UUID, String, Boolean, ForeignKey, DateTime, func
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
 
@@ -18,3 +18,4 @@ class Offer(Base):
     status = Column(SQLAlchemyEnum(StatusEnum), nullable=False, default=StatusEnum.NEW)
     website_id = Column(UUID(as_uuid=True), ForeignKey('websites.id'), nullable=False)
     website = relationship("Website", back_populates="offers")
+    created_at = Column(DateTime, default=func.now())
