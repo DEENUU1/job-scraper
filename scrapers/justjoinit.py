@@ -6,40 +6,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 
 
-CATEGORIES = [
-    "javascript",
-    "html",
-    "php",
-    "ruby",
-    "java",
-    "net",
-    "scala",
-    "c",
-    "mobile",
-    "testing",
-    "devops",
-    "admin",
-    "ux",
-    "pm",
-    "game",
-    "analytics",
-    "security",
-    "data",
-    "go",
-    "support",
-    "erp",
-    "architecture",
-    "other",
-]
-
-
 def scraper() -> None:
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     driver.get("https://justjoin.it/all-locations/java/experience-level_junior")
     data = []
     last_height = 0
     while True:
-        elements = driver.find_elements(By.CLASS_NAME, "css-1pgu3bv")
+        elements = driver.find_elements(By.CLASS_NAME, "css-2crog7")
         if elements:
             for element in elements:
                 data.append(element.get_attribute("outerHTML"))
@@ -53,8 +26,17 @@ def scraper() -> None:
             break
         last_height = new_height
 
-
+    titles = []
     for d in data:
         soup = BeautifulSoup(d, "html.parser")
         title = soup.find("h2")
-        print(title)
+        url = soup.find("a")
+
+        if title and url:
+            title = title.text
+            url = url.get("href")
+
+            if url not in titles:
+                titles.append(url)
+
+    print(len(titles))
