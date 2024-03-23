@@ -1,9 +1,12 @@
 from scrapers.abc.scraper import Scraper
 from scrapers.bulldogjob import BulldogJob
 from scrapers.indeed import Indeed
+from utils.init_db import init_db
 
 
 def main() -> None:
+    init_db()
+
     bulldogjob = Indeed()
 
     Scraper(bulldogjob).scrape(
