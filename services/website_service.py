@@ -11,7 +11,7 @@ class WebsiteService:
         self.website_repository = WebsiteRepository(session)
 
     def create(self, website_input: WebsiteInput) -> WebsiteOutput:
-        if not self.website_repository.website_exists_by_url(website_input.url):
+        if self.website_repository.website_exists_by_url(website_input.url):
             raise ValueError("Website already exists")
 
         return self.website_repository.create(website_input)

@@ -23,8 +23,15 @@ class OfferRepository:
         offer = self.session.query(Offer).filter_by(url=url).first()
         return bool(offer)
 
+    def offer_exists_by_id(self, offer_id: UUID4) -> bool:
+        offer = self.session.query(Offer).filter_by(id=offer_id).first()
+        return bool(offer)
+
     def get_offer_object_by_url(self, url: str) -> Type[Offer]:
         return self.session.query(Offer).filter_by(url=url).first()
+
+    def get_offer_object_by_id(self, offer_id: XXXXX) -> Type[Offer]:
+        return self.session.query(Offer).filter_by(id=offer_id).first()
 
     def get_offer_by_id(self, offer_id: UUID4) -> Type[Offer]:
         return self.session.query(Offer).filter_by(id=offer_id).first()
@@ -54,3 +61,15 @@ class OfferRepository:
             offers = offers.filter(Offer.status == status)
 
         return [OfferOutput(**offer.__dict__) for offer in offers.all()]
+
+    def update_archive(self, offer: Type[Offer]) -> OfferOutput:
+        offer.archived = not offer.archived
+        self.session.commit()
+        self.session.refresh(offer)
+        return OfferOutput(**offer.__dict__)
+
+    def update_status(self, offer: Type[Offer], status: StatusEnum) -> OfferOutput:
+        offer.status = status
+        self.session.commit()
+        self.session.refresh(offer)
+        return OfferOutput(**offer.__dict__)
