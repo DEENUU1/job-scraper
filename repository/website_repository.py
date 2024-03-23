@@ -3,7 +3,6 @@ from pydantic import UUID4
 from sqlalchemy.orm import Session
 from models.website import Website
 from schemas.website_schema import WebsiteInput, WebsiteOutput
-from schemas.offer_schema import OfferInput, OfferOutput
 
 
 class WebsiteRepository:
@@ -30,3 +29,15 @@ class WebsiteRepository:
 
     def get_website_object_by_id(self, website_id: UUID4) -> Type[Website]:
         return self.session.query(Website).filter_by(id=website_id).first()
+
+    def update_url(self, website: Type[Website], url: str) -> WebsiteOutput:
+        website.url = url
+        self.session.commit()
+        self.session.refresh(website)
+        return WebsiteOutput(**website.__dict__)
+
+    def delete(self, website: Type[Website]) -> bool:
+        self.session.delete(website)
+        self.session.commit()
+        return True
+
