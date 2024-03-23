@@ -1,8 +1,8 @@
-from scrapers.nofluffjob import scraper
+from scrapers.indeed import scraper
+
 
 def main() -> None:
     scraper()
-
 
 
 if __name__ == '__main__':
