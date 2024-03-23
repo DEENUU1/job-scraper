@@ -1,8 +1,10 @@
-import requests
-from bs4 import BeautifulSoup
-from .abc.scraper_strategy import ScraperStrategy
 from typing import Optional, List
+
+from bs4 import BeautifulSoup
+
 from schemas.offer_schema import OfferInput
+from utils.get_request import get_request
+from .abc.scraper_strategy import ScraperStrategy
 
 
 class TheProtocol(ScraperStrategy):
@@ -14,8 +16,8 @@ class TheProtocol(ScraperStrategy):
 
         offers = []
         while True:
-            page_content = requests.get(url).text
-            soup = BeautifulSoup(page_content, 'html.parser')
+            response = get_request(url)
+            soup = BeautifulSoup(response.text, 'html.parser')
 
             job_offers = soup.find_all("div", class_="mainWrapper_m12z7gd6")
 
@@ -35,4 +37,3 @@ class TheProtocol(ScraperStrategy):
                     offers.append(OfferInput(url=offer_url, title=title))
 
         return offers
-

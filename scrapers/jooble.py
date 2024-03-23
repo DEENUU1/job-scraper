@@ -1,8 +1,10 @@
-import requests
-from bs4 import BeautifulSoup
-from .abc.scraper_strategy import ScraperStrategy
 from typing import Optional, List
+
+from bs4 import BeautifulSoup
+
 from schemas.offer_schema import OfferInput
+from utils.get_request import get_request
+from .abc.scraper_strategy import ScraperStrategy
 
 
 class Jooble(ScraperStrategy):
@@ -10,7 +12,7 @@ class Jooble(ScraperStrategy):
         base_url = url
         offers = []
 
-        response = requests.get(base_url)
+        response = get_request(base_url)
         soup = BeautifulSoup(response.text, "html.parser")
 
         elements = soup.find_all("div", class_="MhjGza")

@@ -1,0 +1,6 @@
+{
+  "url": "",
+  "websites": [
+    "https://www.olx.pl/api/v1/offers?offset=0&limit=40&category_id=4&region_id=7&city_id=41415&sort_by=created_at%3Adesc&filter_refiners=spell_checker&sl=18c34ade124x23bc10a5"
+  ]
+}

@@ -1,16 +1,16 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-from .abc.scraper_strategy import ScraperStrategy
 from typing import Optional, List
+
+from bs4 import BeautifulSoup
+
 from schemas.offer_schema import OfferInput
+from .abc.scraper_strategy import ScraperStrategy
+from utils.get_driver import get_driver
 
 
 class Indeed(ScraperStrategy):
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+        driver = get_driver()
 
         offers = []
         base_url = url

@@ -1,16 +1,14 @@
 from time import sleep
+from typing import Optional, List
 
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
 
-from .abc.scraper_strategy import ScraperStrategy
-from typing import Optional, List
 from schemas.offer_schema import OfferInput
+from utils.get_driver import get_driver
+from .abc.scraper_strategy import ScraperStrategy
 
 
 class Nofluffjob(ScraperStrategy):
@@ -68,7 +66,7 @@ class Nofluffjob(ScraperStrategy):
             print(e)
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+        driver = get_driver()
         driver.get("https://nofluffjobs.com/pl/Python?criteria=seniority%3Dtrainee,junior&page=1&sort=newest")
         self.click_country(driver)
 

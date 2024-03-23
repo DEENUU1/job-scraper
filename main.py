@@ -1,14 +1,12 @@
+from googlesheet.init_gs import get_worksheet
 from tasks.run_all_scrapers import run_all_scraper
+from utils.get_config import get_config
 
 
 def main() -> None:
-    pass
-
-    # website_1 = WebsiteInput(url="https://www.olx.pl/api/v1/offers?offset=0&limit=40&category_id=4&region_id=7&city_id=41415&sort_by=created_at%3Adesc&filter_refiners=spell_checker&sl=18c34ade124x23bc10a5")
-    # created_website = WebsiteService(session).create(website_1)
-    # print(created_website)
-
-    # run_all_scraper(session)
+    sh = get_worksheet()
+    websites = get_config()["websites"]
+    run_all_scraper(websites, sh)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,10 @@
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-
-from .abc.scraper_strategy import ScraperStrategy
 from typing import Optional, List
+
+from bs4 import BeautifulSoup
+
 from schemas.offer_schema import OfferInput
+from utils.get_driver import get_driver
+from .abc.scraper_strategy import ScraperStrategy
 
 
 class PracujPL(ScraperStrategy):
@@ -38,7 +37,7 @@ class PracujPL(ScraperStrategy):
         return 1
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+        driver = get_driver()
         offers = []
         base_url = url
         driver.get(base_url)
