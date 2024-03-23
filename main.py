@@ -1,4 +1,4 @@
-from scrapers.jooble import scraper
+from scrapers.pracujpl import scraper
 
 def main() -> None:
     scraper()
