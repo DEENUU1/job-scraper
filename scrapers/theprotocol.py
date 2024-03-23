@@ -1,11 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 from .abc.scraper_strategy import ScraperStrategy
+from typing import Optional, List
+from schemas.offer_schema import OfferInput
 
 
 class TheProtocol(ScraperStrategy):
 
-    def scrape(self, url: str) -> None:
+    def scrape(self, url: str) -> List[Optional[OfferInput]]:
         base_url = url
         page_numer = 1
         url = base_url + "&pageNumber=" + str(page_numer)
@@ -28,10 +30,9 @@ class TheProtocol(ScraperStrategy):
                 title = offer.find("h2", class_="titleText_te02th1")
                 offer_url = offer.get('href')
 
-                if title:
+                if title and offers:
                     title = title.text
-                    offers.append({"url": offer_url, "title": title})
+                    offers.append(OfferInput(url=offer_url, title=title))
 
-            print(page_numer)
+        return offers
 
-        print(len(offers))

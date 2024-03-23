@@ -4,19 +4,24 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .abc.scraper_strategy import ScraperStrategy
+from typing import Optional, List
+from schemas.offer_schema import OfferInput
 
 
 class PracujPL(ScraperStrategy):
 
     @staticmethod
-    def parse_data(content: str) -> None:
+    def parse_data(content: str) -> List[Optional[OfferInput]]:
+        parsed_offers = []
         soup = BeautifulSoup(content, "html.parser")
         offers = soup.find_all("div", class_="be8lukl")
         for offer in offers:
             title = offer.find("h2")
             url = offer.find("a", class_="core_n194fgoq")
             if title and url:
-                print(title.text, url.get("href"))
+                parsed_offers.append(OfferInput(title=title.text, url=url.get("href")))
+
+        return parsed_offers
 
     @staticmethod
     def get_max_page_number(content: str) -> int:
@@ -32,9 +37,9 @@ class PracujPL(ScraperStrategy):
 
         return 1
 
-    def scrape(self, url: str) -> None:
+    def scrape(self, url: str) -> List[Optional[OfferInput]]:
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-
+        offers = []
         base_url = url
         driver.get(base_url)
         page_content = driver.page_source
@@ -45,4 +50,7 @@ class PracujPL(ScraperStrategy):
             url = f"{base_url}&pn={page}"
             driver.get(url)
             page_content = driver.page_source
-            self.parse_data(page_content)
+            parsed_offers = self.parse_data(page_content)
+            offers.extend(parsed_offers)
+
+        return offers

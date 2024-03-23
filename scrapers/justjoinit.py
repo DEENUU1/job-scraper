@@ -7,11 +7,13 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .abc.scraper_strategy import ScraperStrategy
+from typing import Optional, List
+from schemas.offer_schema import OfferInput
 
 
 class JustJoinIT(ScraperStrategy):
 
-    def scrape(self, url: str) -> None:
+    def scrape(self, url: str) -> List[Optional[OfferInput]]:
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
         driver.get(url)
         data = []
@@ -31,7 +33,8 @@ class JustJoinIT(ScraperStrategy):
                 break
             last_height = new_height
 
-        titles = []
+        urls = []
+        offers = []
         for d in data:
             soup = BeautifulSoup(d, "html.parser")
             title = soup.find("h2")
@@ -41,7 +44,10 @@ class JustJoinIT(ScraperStrategy):
                 title = title.text
                 url = url.get("href")
 
-                if url not in titles:
-                    titles.append(url)
+                if url not in urls and title:
+                    urls.append(url)
 
-        print(len(titles))
+                    offers.append(OfferInput(title=title, url=url))
+
+        return offers
+

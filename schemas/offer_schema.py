@@ -5,7 +5,6 @@ from enums.status import StatusEnum
 class OfferInput(BaseModel):
     title: str
     url: str
-    website_id: UUID4
 
 
 class OfferOutput(BaseModel):

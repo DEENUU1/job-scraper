@@ -20,6 +20,10 @@ class WebsiteRepository:
         websites = self.session.query(Website).all()
         return [WebsiteOutput(**website.__dict__) for website in websites]
 
+    def website_exists_by_id(self, website_id: UUID4) -> bool:
+        website = self.session.query(Website).filter_by(id=website_id).first()
+        return bool(website)
+
     def website_exists_by_url(self, url: str) -> bool:
         website = self.session.query(Website).filter_by(url=url).first()
         return bool(website)

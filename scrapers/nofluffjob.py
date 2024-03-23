@@ -9,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .abc.scraper_strategy import ScraperStrategy
+from typing import Optional, List
+from schemas.offer_schema import OfferInput
 
 
 class Nofluffjob(ScraperStrategy):
@@ -65,7 +67,7 @@ class Nofluffjob(ScraperStrategy):
         except Exception as e:
             print(e)
 
-    def scrape(self, url: str) -> None:
+    def scrape(self, url: str) -> List[Optional[OfferInput]]:
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
         driver.get("https://nofluffjobs.com/pl/Python?criteria=seniority%3Dtrainee,junior&page=1&sort=newest")
         self.click_country(driver)
@@ -91,8 +93,6 @@ class Nofluffjob(ScraperStrategy):
 
                 if title and url not in unique_urls:
                     unique_urls.append(url)
-                    offer = {"url": url, "title": title.text}
-                    offers.append(offer)
+                    offers.append(OfferInput(title=title.text, url=url))
 
-        print(offers)
-        print(len(offers))
+        return offers

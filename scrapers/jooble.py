@@ -1,10 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 from .abc.scraper_strategy import ScraperStrategy
+from typing import Optional, List
+from schemas.offer_schema import OfferInput
 
 
 class Jooble(ScraperStrategy):
-    def scrape(self, url: str) -> None:
+    def scrape(self, url: str) -> List[Optional[OfferInput]]:
         base_url = url
         offers = []
 
@@ -18,6 +20,7 @@ class Jooble(ScraperStrategy):
             if a_element:
                 title = a_element.text
                 url = a_element.get("href")
-                offers.append({"url": url, "title": title})
+                if title and url:
+                    offers.append(OfferInput(title=title, url=url))
 
-        print(len(offers))
+        return offers

@@ -12,8 +12,8 @@ class OfferRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, offer_input: OfferInput) -> OfferOutput:
-        offer = Offer(**offer_input.dict())
+    def create(self, offer_input: OfferInput, website_id: UUID4) -> OfferOutput:
+        offer = Offer(**offer_input.model_dump(exclude_none=True), website_id=website_id)
         self.session.add(offer)
         self.session.commit()
         self.session.refresh(offer)
@@ -30,7 +30,7 @@ class OfferRepository:
     def get_offer_object_by_url(self, url: str) -> Type[Offer]:
         return self.session.query(Offer).filter_by(url=url).first()
 
-    def get_offer_object_by_id(self, offer_id: XXXXX) -> Type[Offer]:
+    def get_offer_object_by_id(self, offer_id: UUID4) -> Type[Offer]:
         return self.session.query(Offer).filter_by(id=offer_id).first()
 
     def get_offer_by_id(self, offer_id: UUID4) -> Type[Offer]:
