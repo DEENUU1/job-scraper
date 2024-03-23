@@ -1,8 +1,8 @@
 from typing import List, Type
-
+from pydantic import UUID4
 from sqlalchemy.orm import Session
 from models.website import Website
-from schemas.website_schema import WebsiteInput, WebsiteOutput, WebsiteOfferOutput
+from schemas.website_schema import WebsiteInput, WebsiteOutput
 from schemas.offer_schema import OfferInput, OfferOutput
 
 
@@ -27,3 +27,6 @@ class WebsiteRepository:
 
     def get_website_object_by_url(self, url: str) -> Type[Website]:
         return self.session.query(Website).filter_by(url=url).first()
+
+    def get_website_object_by_id(self, website_id: UUID4) -> Type[Website]:
+        return self.session.query(Website).filter_by(id=website_id).first()
