@@ -11,7 +11,7 @@ def run_all_scraper(session: Session) -> None:
     for website in websites:
         scraper_class = url_to_scraper(website.url)
         if not scraper_class:
-            raise Exception(f"No scraper found for website {website.url}")
+            return
 
         scraped_offers = Scraper(scraper_class).scrape(website.url)
 
