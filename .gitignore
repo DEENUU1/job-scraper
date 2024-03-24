@@ -1,5 +1,6 @@
 database.db
 .idea/
+credentials.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

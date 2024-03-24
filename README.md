@@ -181,11 +181,9 @@ git clone https://github.com/DEENUU1/job-scraper.git
 16. Add link to `config.json` in field `url`
 
 #### Config set up
-`url` is dedicated for Google Sheet
-<br>
-`max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
-<br>
-`websites` here you can add multiple urls from which you want to scrape job offers
+- `url` is dedicated for Google Sheet
+- `max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
+- `websites` here you can add multiple urls from which you want to scrape job offers
 
 ### Without docker
 #### Install requirements
@@ -208,6 +206,12 @@ docker build -t scraper .
 ```bash
 docker run scraper
 ```
+
+
+### .exe file
+1. Get .exe file from `assets/main.rar`
+2. Unpack `main.rar`
+3. Inside `main` directory (where `main.exe` is located) add `credentiials.json` file and configure `config.json`
 
 
 ## Authors
