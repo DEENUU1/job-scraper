@@ -28,8 +28,8 @@ class TheProtocol(ScraperStrategy):
 
         if not title or not offer_url:
             return None
-
-        return OfferInput(url=offer_url, title=title.text)
+        full_url = f"https://theprotocol.it{offer_url}"
+        return OfferInput(url=full_url, title=title.text)
 
     def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
         """
