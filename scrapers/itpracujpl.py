@@ -22,6 +22,7 @@ class ITPracujPL(ScraperStrategy):
             if title and url:
                 parsed_offers.append(OfferInput(title=title.text, url=url.get("href")))
 
+        print(f"Parsed {len(parsed_offers)} offers")
         return parsed_offers
 
     @staticmethod
@@ -47,7 +48,8 @@ class ITPracujPL(ScraperStrategy):
         driver.get(base_url)
 
         page_content = driver.page_source
-        self.parse_data(page_content)
+        parsed_offers = self.parse_data(page_content)
+        offers.extend(parsed_offers)
         max_page = self.get_max_page_number(page_content)
         print(f"it.pracuj.pl max page: {max_page}")
 

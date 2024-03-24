@@ -22,9 +22,11 @@ class PracujPL(ScraperStrategy):
         for offer in offers:
             title = offer.find("h2")
             url = offer.find("a", class_="core_n194fgoq")
+            print(title.text, url.get("href"))
             if title and url:
                 parsed_offers.append(OfferInput(title=title.text, url=url.get("href")))
 
+        print(f"Parsed {len(parsed_offers)} offers")
         return parsed_offers
 
     @staticmethod
@@ -61,7 +63,10 @@ class PracujPL(ScraperStrategy):
         self.close_modal(driver)
 
         page_content = driver.page_source
-        self.parse_data(page_content)
+        parsed_offers = self.parse_data(page_content)
+
+        offers.extend(parsed_offers)
+
         max_page = self.get_max_page_number(page_content)
         print(f"pracuj.pl max page: {max_page}")
 
