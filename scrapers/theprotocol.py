@@ -26,19 +26,18 @@ class TheProtocol(ScraperStrategy):
         title = offer.find("h2", class_="titleText_te02th1")
         offer_url = offer.get("href")
 
-        if title and offer_url:
-            title = title.text
-            return OfferInput(url=offer_url, title=title)
+        if not title or not offer_url:
+            return None
 
-        return None
+        return OfferInput(url=offer_url, title=title.text)
 
-    def scrape(self, url: str) -> List[Optional[OfferInput]]:
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
         """
         Scrape job offers from TheProtocol website.
 
         Args:
             url (str): The base URL to start scraping from.
-
+            max_offer_duration_days (int)
         Returns:
             List[Optional[OfferInput]]: A list of scraped offer inputs.
         """

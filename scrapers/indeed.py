@@ -11,32 +11,62 @@ class Indeed(ScraperStrategy):
     """
 
     @staticmethod
-    def parse_offer(offer) -> Optional[OfferInput]:
+    def check_date(offer, max_offer_duration_days: int) -> bool:
+        date_span = offer.find("span", {"data-testid": "myJobsStateDate"})
+        if not date_span:
+            print("No date span found")
+            return False
+
+        date_text = date_span.text.strip()
+
+        num_of_days = ""
+        if "dni temu" in date_text:
+            for char in date_text:
+                if char.isdigit():
+                    num_of_days += char
+
+        if not num_of_days:
+            print("Invalid number of days")
+            return False
+
+        result = int(num_of_days) <= max_offer_duration_days
+        print(f"Result: {result}")
+
+        return result
+
+    def parse_offer(self, offer, max_offer_duration_days: Optional[int] = None) -> Optional[OfferInput]:
         """
         Parses an offer element and extracts relevant information.
 
         Args:
             offer: The offer element to parse.
-
+            max_offer_duration_days
         Returns:
             Optional[OfferInput]: The parsed offer input if successful, None otherwise.
         """
         offer_url = offer.find("a", class_="jcs-JobTitle")
         if offer_url:
             title = offer_url.find("span")
-            if title:
-                full_offer_url = f"indeed.com{offer_url.get('href')}"
-                return OfferInput(url=full_offer_url, title=title.text)
+            if title is None:
+                return None
+
+            full_url = f"indeed.com{offer_url.get("href")}"
+
+            if max_offer_duration_days:
+                if not self.check_date(offer, max_offer_duration_days):
+                    return None
+
+            return OfferInput(url=full_url, title=title.text)
 
         return None
 
-    def scrape(self, url: str) -> List[Optional[OfferInput]]:
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
         """
         Scrapes job offers from Indeed website.
 
         Args:
             url (str): The base URL to start scraping from.
-
+            max_offer_duration_days
         Returns:
             List[Optional[OfferInput]]: A list of scraped offer inputs.
         """
@@ -57,7 +87,7 @@ class Indeed(ScraperStrategy):
             print(f"Found {len(job_elements)} elements")
 
             for offer in job_elements:
-                parsed_offer = self.parse_offer(offer)
+                parsed_offer = self.parse_offer(offer, max_offer_duration_days)
                 if parsed_offer:
                     offers.append(parsed_offer)
 

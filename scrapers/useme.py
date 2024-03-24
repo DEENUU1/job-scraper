@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from schemas.offer_schema import OfferInput
 from utils.get_request import get_request
 from .abc.scraper_strategy import ScraperStrategy
+from datetime import datetime, timedelta
 
 
 class Useme(ScraperStrategy):
@@ -13,31 +14,61 @@ class Useme(ScraperStrategy):
     """
 
     @staticmethod
-    def parse_offer(job) -> Optional[OfferInput]:
+    def check_date(job, max_offer_duration_days: int) -> bool:
+        date_div = job.find("div", class_="job__header-details--date")
+        if not date_div:
+            print("No date div found")
+            return False
+
+        span_elements = date_div.find_all("span")
+        if len(span_elements) != 2:
+            print("Invalid date span elements")
+            return False
+
+        date_str = span_elements[1].text.strip()
+        if date_str == "Zakończone":
+            print("Offer is closed")
+            return False
+
+        date = datetime.strptime(date_str, "%d.%m.%y")
+
+        today = datetime.now()
+        difference = today - date
+
+        result = difference.days <= max_offer_duration_days
+        print(f"Result: {result}")
+
+        return result
+
+    def parse_offer(self, job, max_offer_duration_days: Optional[int] = None) -> Optional[OfferInput]:
         """
         Parse a job offer from the HTML representation.
 
         Args:
             job: HTML representation of the job offer.
-
+            max_offer_duration_days
         Returns:
             Optional[OfferInput]: Parsed job offer input.
         """
-        title = job.find("h2", class_="job__title").text
-        offer_url = job.find("a", class_="job__title-link").get("href")
+        title = job.find("h2", class_="job__title")
+        offer_url = job.find("a", class_="job__title-link")
 
-        if title and offer_url:
-            full_offer_url = f"useme.com{offer_url}"
-            return OfferInput(title=title, url=full_offer_url)
-        return None
+        if not title or not offer_url:
+            return None
+        if max_offer_duration_days:
+            if not self.check_date(job, max_offer_duration_days):
+                return None
 
-    def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        full_offer_url = f"useme.com{offer_url.get("href")}"
+        return OfferInput(title=title.text, url=full_offer_url)
+
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
         """
         Scrape job offers from Useme website.
 
         Args:
             url (str): The base URL to start scraping from.
-
+            max_offer_duration_days
         Returns:
             List[Optional[OfferInput]]: A list of scraped offer inputs.
         """
@@ -57,7 +88,7 @@ class Useme(ScraperStrategy):
             print(f"Found {len(jobs_div)} jobs")
 
             for job in jobs_div:
-                parsed_offer = self.parse_offer(job)
+                parsed_offer = self.parse_offer(job, max_offer_duration_days)
                 if parsed_offer:
                     offers.append(parsed_offer)
 

@@ -30,13 +30,13 @@ class BulldogJob(ScraperStrategy):
             return OfferInput(title=title.text, url=job_url)
         return None
 
-    def scrape(self, url: str) -> List[Optional[OfferInput]]:
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
         """
         Scrapes job offers from BulldogJob website.
 
         Args:
             url (str): The base URL to start scraping from.
-
+            max_offer_duration_days
         Returns:
             List[Optional[OfferInput]]: A list of scraped offer inputs.
         """

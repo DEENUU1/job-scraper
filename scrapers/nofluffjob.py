@@ -108,20 +108,20 @@ class Nofluffjob(ScraperStrategy):
 
         return offers
 
-    def scrape(self, url: str) -> List[Optional[OfferInput]]:
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
         """
         Scrape job offers from Nofluffjob website.
 
         Args:
             url (str): The base URL to start scraping from.
-
+            max_offer_duration_days
         Returns:
             List[Optional[OfferInput]]: A list of scraped offer inputs.
         """
         print(f"Run Nofluffjob scraper")
 
         driver = get_driver()
-        driver.get("https://nofluffjobs.com/pl/Python?criteria=seniority%3Dtrainee,junior&page=1&sort=newest")
+        driver.get(url)
         self.click_country(driver)
 
         data = []

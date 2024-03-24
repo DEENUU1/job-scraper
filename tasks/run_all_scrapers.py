@@ -8,7 +8,8 @@ import time
 
 def run_all_scraper(
         websites: List[Optional[str]],
-        worksheet: gspread.Worksheet
+        worksheet: gspread.Worksheet,
+        max_offer_duration_days: Optional[int] = None
 ) -> None:
     """
     Runs all scrapers for the given list of websites and adds scraped data to the specified Google Sheet.
@@ -16,7 +17,7 @@ def run_all_scraper(
     Args:
         websites (List[Optional[str]]): A list of website URLs to scrape.
         worksheet (gspread.Worksheet): The worksheet to add scraped data to.
-
+        max_offer_duration_days
     Returns:
         None
     """
@@ -30,7 +31,7 @@ def run_all_scraper(
             print("Invalid URL or website is not supported")
             return
 
-        scraped_offers = Scraper(scraper_class).scrape(url)
+        scraped_offers = Scraper(scraper_class).scrape(url, max_offer_duration_days)
         print(len(scraped_offers))
         for offer in scraped_offers:
             time.sleep(1.5)  # Rate limit Google Sheet API (60 requests per minute)
