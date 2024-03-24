@@ -21,6 +21,8 @@
   </p>
 </div>
 
+<img src="assets/gs.png" alt="google_sheet_results">
+
 ## Features
 
 1. **Multi-Portal Job Scraper:**
@@ -44,137 +46,146 @@
    - The application handles cookie consent pop-ups automatically, ensuring uninterrupted scraping experience.
 
 ## Supported websites and url configuration
+
+### !INFO! 
+I recommend that each link comes from the first page (pagination) and that it complies with the recommendations below. I have provided examples of correct and incorrect links for each page
+
 <details>
 <summary><a href="https://bulldogjob.pl/">bulldogjob</a></summary>
+
 ```
-CODE!
+# bulldogjob.pl url must ends with "/page,"
+
+https://bulldogjob.pl/companies/jobs/page,  # valid
+https://bulldogjob.pl/companies/jobs/s/skills,Python,JavaScript/page, #valid
+
+https://bulldogjob.pl/companies/jobs/s/skills,Python,JavaScript # invalid
 ```
+
 </details>
 
 <details>
 <summary><a href="https://pl.indeed.com/?from=gnav-jobsearch--indeedmobile">indeed</a></summary>
+
 ```
-CODE!
+# indeed.com url have to include some parameters
+
+https://pl.indeed.com/jobs?q=&l=Warszawa%2C+mazowieckie&from=searchOnHP&vjk=1593bca04b48ed8a # valid (choose Warsaw as a location)
+
+https://pl.indeed.com/ # invalid
+
 ```
+
 </details>
 <details>
 <summary><a href="https://it.pracuj.pl/praca">it.pracuj.pl</a></summary>
+
 ```
-CODE!
+https://it.pracuj.pl/praca # valid
+https://it.pracuj.pl/praca?itth=50%2C75 # valid
 ```
+
 </details>
 <details>
 <summary><a href="https://pl.jooble.org/SearchResult">jooble</a></summary>
+
 ```
-CODE!
+# Here you need to add some filters on the website, then copy url and scroll few times
+# and then change `?p=` value to for example 10000 
+
+https://pl.jooble.org/SearchResult?p=10000&rgns=Warszawa # valid
+https://pl.jooble.org/SearchResult?rgns=Warszawa # invalid
+
 ```
+
 </details>
 <details>
 <summary><a href="https://nofluffjobs.com/pl">nofluffjobs</a></summary>
+
 ```
-CODE!
+https://nofluffjobs.com/pl # valid
+https://nofluffjobs.com/pl/.NET?page=1&criteria=seniority%3Dtrainee,junior # valid
 ```
+
 </details>
 <details>
 <summary><a href="https://www.olx.pl/praca/">olx</a></summary>
+
 ```
-CODE!
+# Scraping data from OLX is a little more difficult
+# First you need to go to https://www.olx.pl/praca/ and choose all filters that you need 
+# Then click the right mouse button and go to Devtools
+# Go to Network tab and refresh the page
+# Scroll to the end and go to page 2 (pagination)
+# Scroll to the end again and now in the Network tab search for a JSON with url like this "https://www.olx.pl/api/v1/offers/?offset=40&...."
+# In my example it looks like this https://www.olx.pl/api/v1/offers/?offset=40&limit=40&category_id=4&filter_refiners=spell_checker&sl=18c34ade124x23bc10a5
+# Then click links and go to previous 
+# Cope this link from your browser and add to config.json file
 ```
+
 </details>
 <details>
 <summary><a href="https://theprotocol.it/filtry/java;t/trainee,assistant;p">theprotocol</a></summary>
+
 ```
-CODE!
+https://theprotocol.it/filtry/java;t/trainee,assistant;p # valid
+https://theprotocol.it/praca # valid 
 ```
+
 </details>
 <details>
 <summary><a href="https://useme.com/pl/jobs/category/programowanie-i-it,35/">useme</a></summary>
+
 ```
-CODE!
+https://useme.com/pl/jobs/category/programowanie-i-it,35/ # valid
+https://useme.com/pl/jobs/category/multimedia,36/ # valid
+https://useme.com/pl/jobs/category/serwisy-internetowe,34/ # valid
+https://useme.com/pl/jobs/category/serwisy-internetowe,34/sklepy-internetowe,97/ # valid
 ```
+
 </details>
 
-## Commands & Examples
-
-#### Scrape all movies/shows from each genre
-```bash
-python main.py list-scraper
-```
-
-#### Scrape all movies/show from the given genre
-```bash
-python main.py list-scraper-url <url_here>
-```
-
-for example
-```bash
-python main.py list-scraper-url https://www.tvtime.com/pl/genres/action
-```
-
-#### Scrape details for each movies/show in database
-```bash
-python main.py details-scraper
-```
-
-#### Export data to JSON
-```bash
-python main.py export-to-json --start_page 1 --page-limit 12
-```
-```json
-[
-    {
-        "id": "df22da8c-db97-4c27-86a0-e440b2d67414",
-        "title": "Wakfu",
-        "genre": "AKCJA",
-        "production_year": null,
-        "image": "https://www.tvtime.com/_next/image?url=https%3A%2F%2Fartworks.thetvdb.com%2Fbanners%2Fv4%2Fseries%2F94121%2Fposters%2F65d88839b6802_t.jpg&w=750&q=75",
-        "hours": null,
-        "minutes": null,
-        "url": "https://www.tvtime.com/show/94121",
-        "type": "Show",
-        "details": true,
-        "rating": null,
-        "description": "Follow Yugo and his friends Amalia, Evangelyne, Tristepin, Ruel and Az as they try to rescue the World of Twelve from destruction.",
-        "keywords": "FANTASY,,RODZINNY,,ANIMACJA,,PRZYGODOWY,,AKCJA",
-        "actors": [
-            {
-                "full_name": "G\u00e9rard Surugue",
-                "image": "https://www.tvtime.com/_next/image?url=https%3A%2F%2Fartworks.thetvdb.com%2Fbanners%2Fv4%2Factor%2F621366%2Fphoto%2F65324fa2daf1c_t.jpg&w=256&q=75",
-                "url": "https://www.tvtime.com/people/621366-gerard-surugue",
-                "id": "f16ff459-8ccd-451e-a04b-e3bbb90d6294"
-            },
-            {
-                "full_name": "Thomas Guitard",
-                "image": "https://www.tvtime.com/_next/image?url=https%3A%2F%2Fartworks.thetvdb.com%2Fbanners%2Fv4%2Factor%2F7950847%2Fphoto%2F65c62c81bac17_t.jpg&w=256&q=75",
-                "url": "https://www.tvtime.com/people/7950847-thomas-guitard",
-                "id": "b6813e27-f892-4b24-bb05-023e0538856b"
-            }
-        ]
-    },
-```
-
-
-By default start_page is set to 1 and page_limit to 50 so you don't need to pass this options to your command
-for example
-```bash
-python main.py export-to-json
-```
 
 
 ## Technologies:
 - Python
+  - Requests
+  - BeautifulSoup4
   - Selenium
-  - Typer
-- SQLite
 - Docker 
-
+- Google Sheet
 
 ## Installation
 
 #### Clone repository
 ```bash
-git clone https://github.com/DEENUU1/tvtime-scraper.git
+git clone https://github.com/DEENUU1/job-scraper.git
 ```
+
+#### Set up your Google Account
+1. Go to <a href="https://console.cloud.google.com/welcome?project=private-418116">Google Console</a>
+2. Create or choose existing project <a href="https://developers.google.com/workspace/guides/create-project?hl=pl">Tutorial</a>
+3. Go to Navigation Menu and select APIs & Services and then Credentials
+4. Click CREATE CREDENTIALS and choose Service Account
+5. Give some random name and click Done
+6. Copy e-mail of the created account
+7. Then click on the pencil button to the left of the trash icon
+8. Go to Keys and click ADD KEY and then Create new key
+9. Choose JSON format and then Create 
+10. Rename downloaded file to `credentials.json` and copy it to the main direction of this project (the same directory where main.py is located)
+11. <a href="https://console.cloud.google.com/marketplace/product/google/sheets.googleapis.com?q=search&referrer=search&project=private-418116" >Go back to Google Console and search for Google Seet API</a>
+12. Enable this API
+13. Create new Google Sheet 
+14. In Google Sheet click on Share and copy here the email you copied earlier
+15. Choose access for all people with link and copy this link
+16. Add link to `config.json` in field `url`
+
+#### Config set up
+`url` is dedicated for Google Sheet
+<br>
+`max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
+<br>
+`websites` here you can add multiple urls from which you want to scrape job offers
 
 ### Without docker
 #### Install requirements
@@ -182,9 +193,9 @@ git clone https://github.com/DEENUU1/tvtime-scraper.git
 pip install -r requirements.txt
 ```
 
-#### Run specified command
+#### Run script
 ```bash
-python main.py <command_here>
+python main.py
 ```
 
 ### With docker
@@ -193,9 +204,9 @@ python main.py <command_here>
 docker build -t scraper .
 ```
 
-#### Run specified command
+#### Run script
 ```bash
-docker run scraper <command_here>
+docker run scraper
 ```
 
 
