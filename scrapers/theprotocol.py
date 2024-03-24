@@ -8,8 +8,40 @@ from .abc.scraper_strategy import ScraperStrategy
 
 
 class TheProtocol(ScraperStrategy):
+    """
+    A class implementing the scraping strategy for TheProtocol website.
+    """
+
+    @staticmethod
+    def parse_offer(offer) -> Optional[OfferInput]:
+        """
+        Parse a job offer from the HTML representation.
+
+        Args:
+            offer: HTML representation of the job offer.
+
+        Returns:
+            Optional[OfferInput]: Parsed job offer input.
+        """
+        title = offer.find("h2", class_="titleText_te02th1")
+        offer_url = offer.get("href")
+
+        if title and offer_url:
+            title = title.text
+            return OfferInput(url=offer_url, title=title)
+
+        return None
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        """
+        Scrape job offers from TheProtocol website.
+
+        Args:
+            url (str): The base URL to start scraping from.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of scraped offer inputs.
+        """
         print("Run TheProtocol scraper")
 
         base_url = url
@@ -26,12 +58,9 @@ class TheProtocol(ScraperStrategy):
             print(f"Found {len(job_offers)} job offers")
 
             for offer in job_offers:
-                title = offer.find("h2", class_="titleText_te02th1")
-                offer_url = offer.get("href")
-
-                if title and offer_url:
-                    title = title.text
-                    offers.append(OfferInput(url=offer_url, title=title))
+                parsed_offer = self.parse_offer(offer)
+                if parsed_offer:
+                    offers.append(parsed_offer)
 
             page_number += 1
 
@@ -40,4 +69,3 @@ class TheProtocol(ScraperStrategy):
 
         print(f"Scraped {len(offers)} offers")
         return offers
-

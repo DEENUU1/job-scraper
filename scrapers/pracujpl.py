@@ -1,19 +1,31 @@
 from typing import Optional, List
 
 from bs4 import BeautifulSoup
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from schemas.offer_schema import OfferInput
 from utils.get_driver import get_driver
 from .abc.scraper_strategy import ScraperStrategy
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class PracujPL(ScraperStrategy):
+    """
+    A class implementing the scraping strategy for PracujPL website.
+    """
 
     @staticmethod
     def parse_data(content: str) -> List[Optional[OfferInput]]:
+        """
+        Parse job offer data from HTML content.
+
+        Args:
+            content (str): The HTML content to parse.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of parsed offer inputs.
+        """
         parsed_offers = []
         soup = BeautifulSoup(content, "html.parser")
         offers = soup.find_all("div", class_="tiles_c1m5bwec")
@@ -31,6 +43,15 @@ class PracujPL(ScraperStrategy):
 
     @staticmethod
     def get_max_page_number(content: str) -> int:
+        """
+        Get the maximum page number from the HTML content.
+
+        Args:
+            content (str): The HTML content of the page.
+
+        Returns:
+            int: The maximum page number.
+        """
         try:
             soup = BeautifulSoup(content, "html.parser")
             max_page_element = soup.find(
@@ -45,6 +66,12 @@ class PracujPL(ScraperStrategy):
 
     @staticmethod
     def close_modal(driver) -> None:
+        """
+        Close any modal that may appear on the page.
+
+        Args:
+            driver: The Selenium WebDriver instance.
+        """
         try:
             modal = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "core_ig18o8w"))
@@ -54,6 +81,15 @@ class PracujPL(ScraperStrategy):
             print(e)
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        """
+        Scrape job offers from PracujPL website.
+
+        Args:
+            url (str): The base URL to start scraping from.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of scraped offer inputs.
+        """
         print("Run PracujPL scraper")
         offers = []
         base_url = url

@@ -10,12 +10,21 @@ from .abc.scraper_strategy import ScraperStrategy
 
 
 class JustJoinIT(ScraperStrategy):
+    """
+    A class implementing the scraping strategy for JustJoinIT website.
+    """
 
-    def scrape(self, url: str) -> List[Optional[OfferInput]]:
-        print("Run JustJoinIT scraper")
+    @staticmethod
+    def get_content(driver) -> List[Optional[str]]:
+        """
+        Retrieves the HTML content of job offer elements from the webpage.
 
-        driver = get_driver()
-        driver.get(url)
+        Args:
+            driver: The Selenium WebDriver instance.
+
+        Returns:
+            List[Optional[str]]: A list of HTML content strings.
+        """
         data = []
         last_height = 0
         while True:
@@ -34,8 +43,20 @@ class JustJoinIT(ScraperStrategy):
             if new_height == last_height:
                 break
             last_height = new_height
+        return data
 
-        urls = []
+    @staticmethod
+    def parse_offers(data) -> List[Optional[OfferInput]]:
+        """
+        Parses job offer data from HTML content.
+
+        Args:
+            data (List[Optional[str]]): A list of HTML content strings.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of parsed offer inputs.
+        """
+        unique_urls = []
         offers = []
         for d in data:
             soup = BeautifulSoup(d, "html.parser")
@@ -46,11 +67,30 @@ class JustJoinIT(ScraperStrategy):
                 title = title.text
                 url = url.get("href")
 
-                if url not in urls and title:
-                    urls.append(url)
+                if url not in unique_urls and title:
+                    unique_urls.append(url)
 
                     full_url = f"justjoin.it{url}"
                     offers.append(OfferInput(title=title, url=full_url))
-
-        print(f"Scraped {len(offers)} offers")
         return offers
+
+    def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        """
+        Scrapes job offers from JustJoinIT website.
+
+        Args:
+            url (str): The base URL to start scraping from.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of scraped offer inputs.
+        """
+        print("Run JustJoinIT scraper")
+
+        driver = get_driver()
+        driver.get(url)
+
+        data = self.get_content(driver)
+        parsed_offers = self.parse_offers(data)
+
+        print(f"Scraped {len(parsed_offers)} offers")
+        return parsed_offers

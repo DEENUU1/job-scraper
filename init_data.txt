@@ -1,0 +1,4 @@
+    "https://www.pracuj.pl/praca/zdunska%20wola;wp/ostatnich%203%20dni;p,3?rd=10&et=17%2C3%2C1%2C2&sc=0&iwhpl=true",
+    "https://www.olx.pl/api/v1/offers?offset=0&limit=40&category_id=4&region_id=7&city_id=41415&sort_by=created_at%3Adesc&filter_refiners=spell_checker&sl=18c34ade124x23bc10a5",
+    "https://www.olx.pl/api/v1/offers?offset=0&limit=40&category_id=4&region_id=7&city_id=41415&distance=10&sort_by=created_at%3Adesc&filter_refiners=spell_checker&sl=18c34ade124x23bc10a5",
+        "https://www.olx.pl/api/v1/offers?category_id=0&excluded_category_id=4&filter_refiners=spell_checker&limit=40&offset=0&query=python&sl=18c34ade124x23bc10a5&strategy=cse&suggest_filters=true",

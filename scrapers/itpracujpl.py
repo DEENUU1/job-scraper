@@ -8,9 +8,21 @@ from .abc.scraper_strategy import ScraperStrategy
 
 
 class ITPracujPL(ScraperStrategy):
+    """
+    A class implementing the scraping strategy for ITPracujPL website.
+    """
 
     @staticmethod
     def parse_data(content: str) -> List[Optional[OfferInput]]:
+        """
+        Parses job offer data from the HTML content.
+
+        Args:
+            content (str): The HTML content to parse.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of parsed offer inputs.
+        """
         parsed_offers = []
         soup = BeautifulSoup(content, "html.parser")
         offers = soup.find_all("div", class_="be8lukl")
@@ -27,6 +39,15 @@ class ITPracujPL(ScraperStrategy):
 
     @staticmethod
     def get_max_page_number(content: str) -> int:
+        """
+        Retrieves the maximum page number from the HTML content.
+
+        Args:
+            content (str): The HTML content containing pagination information.
+
+        Returns:
+            int: The maximum page number.
+        """
         try:
             soup = BeautifulSoup(content, "html.parser")
             max_page_element = soup.find(
@@ -40,6 +61,15 @@ class ITPracujPL(ScraperStrategy):
         return 1
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        """
+        Scrapes job offers from ITPracujPL website.
+
+        Args:
+            url (str): The base URL to start scraping from.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of scraped offer inputs.
+        """
         print("Run ITPracujPL scraper")
         offers = []
         base_url = url

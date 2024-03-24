@@ -5,8 +5,19 @@ from schemas.offer_schema import OfferInput
 
 
 class OLX(ScraperStrategy):
-
+    """
+    A class implementing the scraping strategy for OLX website.
+    """
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        """
+        Scrape job offers from OLX website.
+
+        Args:
+            url (str): The base URL to start scraping from.
+
+        Returns:
+            List[Optional[OfferInput]]: A list of scraped offer inputs.
+        """
         print("Run OLX scraper")
 
         base_url = url
