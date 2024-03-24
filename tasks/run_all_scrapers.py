@@ -1,9 +1,10 @@
 from typing import List, Optional
 
+import gspread
+
 from googlesheet.add_to_gs import add_data_to_sheet
 from scrapers.abc.scraper import Scraper
 from utils.map_url_to_scraper import url_to_scraper
-import gspread
 
 
 def run_all_scraper(
@@ -15,12 +16,13 @@ def run_all_scraper(
         return
 
     for url in websites:
-        scraper_class = url_to_scraper(url)
+        scraper_class, website = url_to_scraper(url)
         if not scraper_class:
             print("Invalid url or website is not supported")
             return
 
         scraped_offers = Scraper(scraper_class).scrape(url)
-
+        print(len(scraped_offers))
         for offer in scraped_offers:
-            add_data_to_sheet(data=offer, worksheet=worksheet)
+            print("Add scraped offers to Google Sheet")
+            add_data_to_sheet(data=offer, website=website, worksheet=worksheet)

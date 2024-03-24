@@ -12,12 +12,16 @@ from .abc.scraper_strategy import ScraperStrategy
 class JustJoinIT(ScraperStrategy):
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        print("Run JustJoinIT scraper")
+
         driver = get_driver()
         driver.get(url)
         data = []
         last_height = 0
         while True:
             elements = driver.find_elements(By.CLASS_NAME, "css-2crog7")
+            print(f"Found {len(elements)} elements")
+
             if elements:
                 for element in elements:
                     data.append(element.get_attribute("outerHTML"))
@@ -45,6 +49,8 @@ class JustJoinIT(ScraperStrategy):
                 if url not in urls and title:
                     urls.append(url)
 
-                    offers.append(OfferInput(title=title, url=url))
+                    full_url = f"justjoin.it{url}"
+                    offers.append(OfferInput(title=title, url=full_url))
 
+        print(f"Scraped {len(offers)} offers")
         return offers

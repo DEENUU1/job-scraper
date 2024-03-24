@@ -10,30 +10,34 @@ from .abc.scraper_strategy import ScraperStrategy
 class TheProtocol(ScraperStrategy):
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        print("Run TheProtocol scraper")
+
         base_url = url
-        page_numer = 1
-        url = base_url + "&pageNumber=" + str(page_numer)
-
+        page_number = 1
         offers = []
+
         while True:
+            url = f"{base_url}&pageNumber={page_number}"
             response = get_request(url)
+            print(f"Status code: {response.status_code}")
+
             soup = BeautifulSoup(response.text, 'html.parser')
+            job_offers = soup.find_all("a", class_="anchorClass_aqdsolh")
+            print(f"Found {len(job_offers)} job offers")
 
-            job_offers = soup.find_all("div", class_="mainWrapper_m12z7gd6")
+            for offer in job_offers:
+                title = offer.find("h2", class_="titleText_te02th1")
+                offer_url = offer.get("href")
 
-            if job_offers:
-                page_numer += 1
-                url = base_url + "&pageNumber=" + str(page_numer)
+                if title and offer_url:
+                    title = title.text
+                    offers.append(OfferInput(url=offer_url, title=title))
+
+            page_number += 1
 
             if not job_offers:
                 break
 
-            for offer in job_offers:
-                title = offer.find("h2", class_="titleText_te02th1")
-                offer_url = offer.get('href')
-
-                if title and offers:
-                    title = title.text
-                    offers.append(OfferInput(url=offer_url, title=title))
-
+        print(f"Scraped {len(offers)} offers")
         return offers
+

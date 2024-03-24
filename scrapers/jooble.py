@@ -9,13 +9,18 @@ from .abc.scraper_strategy import ScraperStrategy
 
 class Jooble(ScraperStrategy):
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        print("Run Jooble scraper")
+
         base_url = url
         offers = []
 
         response = get_request(base_url)
+        print(f"Status code: {response.status_code}")
         soup = BeautifulSoup(response.text, "html.parser")
 
         elements = soup.find_all("div", class_="MhjGza")
+        print(f"Found {len(elements)} elements")
+
         for element in elements:
             a_element = element.find("a", class_="_8w9Ce2")
 
@@ -25,4 +30,5 @@ class Jooble(ScraperStrategy):
                 if title and url:
                     offers.append(OfferInput(title=title, url=url))
 
+        print(f"Scraped {len(offers)} offers")
         return offers

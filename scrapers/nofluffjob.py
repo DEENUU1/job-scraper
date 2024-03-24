@@ -66,6 +66,8 @@ class Nofluffjob(ScraperStrategy):
             print(e)
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        print(f"Run Nofluffjob scraper")
+
         driver = get_driver()
         driver.get("https://nofluffjobs.com/pl/Python?criteria=seniority%3Dtrainee,junior&page=1&sort=newest")
         self.click_country(driver)
@@ -91,6 +93,9 @@ class Nofluffjob(ScraperStrategy):
 
                 if title and url not in unique_urls:
                     unique_urls.append(url)
-                    offers.append(OfferInput(title=title.text, url=url))
 
+                    full_url = f"nofluffjobs.com{url}"
+                    offers.append(OfferInput(title=title.text, url=full_url))
+
+        print(f"Scraped {len(offers)} offers")
         return offers

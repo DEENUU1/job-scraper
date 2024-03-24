@@ -5,18 +5,15 @@ from bs4 import BeautifulSoup
 from schemas.offer_schema import OfferInput
 from utils.get_driver import get_driver
 from .abc.scraper_strategy import ScraperStrategy
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
-class PracujPL(ScraperStrategy):
+class ITPracujPL(ScraperStrategy):
 
     @staticmethod
     def parse_data(content: str) -> List[Optional[OfferInput]]:
         parsed_offers = []
         soup = BeautifulSoup(content, "html.parser")
-        offers = soup.find_all("div", class_="tiles_c1m5bwec")
+        offers = soup.find_all("div", class_="be8lukl")
         print(f"Found {len(offers)} offers")
 
         for offer in offers:
@@ -41,29 +38,18 @@ class PracujPL(ScraperStrategy):
 
         return 1
 
-    @staticmethod
-    def close_modal(driver) -> None:
-        try:
-            modal = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "core_ig18o8w"))
-            )
-            modal.click()
-        except Exception as e:
-            print(e)
-
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
-        print("Run PracujPL scraper")
+        print("Run ITPracujPL scraper")
         offers = []
         base_url = url
 
         driver = get_driver()
         driver.get(base_url)
-        self.close_modal(driver)
 
         page_content = driver.page_source
         self.parse_data(page_content)
         max_page = self.get_max_page_number(page_content)
-        print(f"pracuj.pl max page: {max_page}")
+        print(f"it.pracuj.pl max page: {max_page}")
 
         for page in range(2, max_page + 1):
             url = f"{base_url}&pn={page}"

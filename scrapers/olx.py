@@ -7,10 +7,14 @@ from schemas.offer_schema import OfferInput
 class OLX(ScraperStrategy):
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
+        print("Run OLX scraper")
+
         base_url = url
         offers = []
+
         while True:
             response = requests.get(base_url)
+            print(f"Status code: {response.status_code}")
             data = response.json()
 
             for d in data["data"]:
@@ -27,4 +31,5 @@ class OLX(ScraperStrategy):
             if next_page_element:
                 base_url = next_page_element.get("href")
 
+        print(f"Scraped {len(offers)} offers")
         return offers

@@ -6,13 +6,15 @@ import gspread
 
 def add_data_to_sheet(
         data: OfferInput,
+        website: str,
         worksheet: gspread.Worksheet,
-        url_column: int = 2
+        url_column: int = 2,
 ) -> None:
     if not url_exist(worksheet, url_column, data.url):
         row_data = [
             data.title,
             data.url,
+            website,
             str(get_current_date())
         ]
         worksheet.insert_row(row_data, index=2)

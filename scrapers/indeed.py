@@ -10,8 +10,9 @@ from utils.get_driver import get_driver
 class Indeed(ScraperStrategy):
 
     def scrape(self, url: str) -> List[Optional[OfferInput]]:
-        driver = get_driver()
+        print("Run Indeed scraper")
 
+        driver = get_driver()
         offers = []
         base_url = url
 
@@ -21,13 +22,15 @@ class Indeed(ScraperStrategy):
             page_source = driver.page_source
             soup = BeautifulSoup(page_source, "html.parser")
             job_elements = soup.find_all("li", class_="css-5lfssm")
+            print(f"Found {len(job_elements)} elements")
 
             for offer in job_elements:
                 offer_url = offer.find("a", class_="jcs-JobTitle")
                 if offer_url:
                     title = offer_url.find("span")
                     if title:
-                        offers.append(OfferInput(url=offer_url.get("href"), title=title.text))
+                        full_offer_url = f"indeed.com{offer_url.get("href")}"
+                        offers.append(OfferInput(url=full_offer_url, title=title.text))
 
             next_page_button = soup.find("a", {"data-testid": "pagination-page-next"})
             if not next_page_button:
@@ -36,4 +39,5 @@ class Indeed(ScraperStrategy):
             if next_page_button:
                 base_url = "https://pl.indeed.com" + next_page_button.get("href")
 
+        print(f"Scraped {len(offers)} offers")
         return offers
