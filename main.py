@@ -1,6 +1,12 @@
 from googlesheet.init_gs import get_worksheet
 from tasks.run_all_scrapers import run_all_scraper
 from utils.get_config import get_config
+import os
+
+
+if not os.path.exists("urls_to_skip.txt"):
+    with open("urls_to_skip.txt", "w") as f:
+        f.write("")
 
 
 def main() -> None:

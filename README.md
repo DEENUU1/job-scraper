@@ -185,6 +185,16 @@ git clone https://github.com/DEENUU1/job-scraper.git
 - `max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
 - `websites` here you can add multiple urls from which you want to scrape job offers
 
+#### `urls_to_skip.txt` set up **(Optional)**
+Here you can add links for job offers that should be skipped and not added to your Google Sheet document
+<br>
+It should looks like this, each url in new line. 
+```txt
+https://www.pracuj.pl/praca/konsultant-wdrozeniowiec-systemu-obiegu-dokumentow-warszawa-poloneza-93,oferta,1003226213?s=4a77b1b9&searchId=MTcxMTM3NTM0NDY5NS4yNjcz
+https://www.pracuj.pl/praca/mlodszy-analityk-biznesowy-warszawa-dzielna-60,oferta,1003211869?s=4a77b1b9&searchId=MTcxMTM3NTM0NDY5NS4yNjcz
+https://www.pracuj.pl/praca/junior-devops-engineer-z-chmura-gcp-warszawa,oferta,1003220296?s=4a77b1b9&searchId=MTcxMTM3NTM0NDY5NS4yNjcz
+```
+
 ### Without docker
 #### Install requirements
 ```bash
