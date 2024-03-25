@@ -1,2 +1,0 @@
-    "https://theprotocol.it/filtry/python;t/trainee,assistant,junior;p/praca/junior-python-developer-gdynia,oferta,84250000-d6d1-1a10-17fd-08dc41b13901?s=133835811&searchId=8117f030-e971-11ee-88f6-35a54aea5253&sort=date",
-    "https://theprotocol.it/filtry/python;t/mid;p/praca/avp-model-risk-management-krakow-kapelanka-42a,oferta,d7340000-59c8-22a3-3f13-08dc4a841835?s=1342142384&searchId=8256ffe0-e971-11ee-abb5-618b60eccd36&sort=date",

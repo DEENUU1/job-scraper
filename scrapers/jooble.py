@@ -20,6 +20,10 @@ class Jooble(ScraperStrategy):
             return False
 
         text = div_element.text
+
+        if "godzin" in text:
+            return True
+
         if "dni" not in text:
             print(f"Offer too old: {text}")
             return False

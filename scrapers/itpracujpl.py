@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from schemas.offer_schema import OfferInput
 from utils.get_driver import get_driver
 from .abc.scraper_strategy import ScraperStrategy
+from utils.remove_search_id import remove_search_id_from_url
 
 
 class ITPracujPL(ScraperStrategy):
@@ -32,7 +33,9 @@ class ITPracujPL(ScraperStrategy):
             title = offer.find("h2")
             url = offer.find("a", class_="core_n194fgoq")
             if title and url:
-                parsed_offers.append(OfferInput(title=title.text, url=url.get("href")))
+                processed_url = remove_search_id_from_url(url.get("href"))
+
+                parsed_offers.append(OfferInput(title=title.text, url=processed_url))
 
         print(f"Parsed {len(parsed_offers)} offers")
         return parsed_offers

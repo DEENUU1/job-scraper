@@ -44,8 +44,9 @@ def run_all_scraper(
 
             if url_exist(worksheet, 2, offer.url):
                 print("Offer exists in google sheet")
+                time.sleep(2)
                 continue
 
-            time.sleep(1)  # Rate limit Google Sheet API (60 requests per minute)
+            time.sleep(2)  # Rate limit Google Sheet API (60 requests per minute)
 
             add_data_to_sheet(data=offer, website=website, worksheet=worksheet)
