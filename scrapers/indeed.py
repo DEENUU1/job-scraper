@@ -19,6 +19,9 @@ class Indeed(ScraperStrategy):
 
         date_text = date_span.text.strip()
 
+        if "przed chwilą" in date_text or "Dzisiaj" in date_text:
+            return True
+
         num_of_days = ""
         if "dni temu" in date_text:
             for char in date_text:
