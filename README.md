@@ -182,6 +182,7 @@ git clone https://github.com/DEENUU1/job-scraper.git
 
 #### Config set up
 - `url` is dedicated for Google Sheet
+- `keywords_to_pass` List of keywords after which offers are to be skipped
 - `max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
 - `websites` here you can add multiple urls from which you want to scrape job offers
 

@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from schemas.offer_schema import OfferInput
 from utils.get_request import get_request
 from .abc.scraper_strategy import ScraperStrategy
+from utils.theprotocol_process_url import theprotocol_remove_search_id
 
 
 class TheProtocol(ScraperStrategy):
@@ -29,7 +30,8 @@ class TheProtocol(ScraperStrategy):
         if not title or not offer_url:
             return None
         full_url = f"https://theprotocol.it{offer_url}"
-        return OfferInput(url=full_url, title=title.text)
+        processed_url = theprotocol_remove_search_id(full_url)
+        return OfferInput(url=processed_url, title=title.text)
 
     def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
         """
