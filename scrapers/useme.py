@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from bs4 import BeautifulSoup
 
-from schemas.offer_schema import OfferInput
+from schemas.offer import Offer
 from utils.get_request import get_request
 from .abc.scraper_strategy import ScraperStrategy
 from datetime import datetime, timedelta
@@ -17,17 +17,14 @@ class Useme(ScraperStrategy):
     def check_date(job, max_offer_duration_days: int) -> bool:
         date_div = job.find("div", class_="job__header-details--date")
         if not date_div:
-            print("No date div found")
             return False
 
         span_elements = date_div.find_all("span")
         if len(span_elements) != 2:
-            print("Invalid date span elements")
             return False
 
         date_str = span_elements[1].text.strip()
         if date_str == "Zakończone":
-            print("Offer is closed")
             return False
 
         date = datetime.strptime(date_str, "%d.%m.%y")
@@ -36,11 +33,10 @@ class Useme(ScraperStrategy):
         difference = today - date
 
         result = difference.days <= max_offer_duration_days
-        print(f"Result: {result}")
 
         return result
 
-    def parse_offer(self, job, max_offer_duration_days: Optional[int] = None) -> Optional[OfferInput]:
+    def parse_offer(self, job, max_offer_duration_days: Optional[int] = None) -> Optional[Offer]:
         """
         Parse a job offer from the HTML representation.
 
@@ -48,21 +44,29 @@ class Useme(ScraperStrategy):
             job: HTML representation of the job offer.
             max_offer_duration_days
         Returns:
-            Optional[OfferInput]: Parsed job offer input.
+            Optional[Offer]: Parsed job offer input.
         """
         title = job.find("h2", class_="job__title")
         offer_url = job.find("a", class_="job__title-link")
 
         if not title or not offer_url:
             return None
-        if max_offer_duration_days:
-            if not self.check_date(job, max_offer_duration_days):
-                return None
+
+        if max_offer_duration_days and not self.check_date(job, max_offer_duration_days):
+            return None
 
         full_offer_url = f"useme.com{offer_url.get("href")}"
-        return OfferInput(title=title.text, url=full_offer_url)
+        return Offer(title=title.text, url=full_offer_url)
 
-    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
+    @staticmethod
+    def get_next_page_url(soup, base_url) -> Optional[str]:
+        next_page_url = soup.find("a", rel="next")
+        if not next_page_url:
+            return None
+
+        return base_url + next_page_url.get("href")
+
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[Offer]]:
         """
         Scrape job offers from Useme website.
 
@@ -70,17 +74,16 @@ class Useme(ScraperStrategy):
             url (str): The base URL to start scraping from.
             max_offer_duration_days
         Returns:
-            List[Optional[OfferInput]]: A list of scraped offer inputs.
+            List[Optional[Offer]]: A list of scraped offer inputs.
         """
-        print("Run Useme scraper")
-
         base_url = url
         url = base_url
         offers = []
 
         while True:
             response = get_request(url)
-            print(f"Status code: {response.status_code}")
+            if not response:
+                break
 
             soup = BeautifulSoup(response.text, "html.parser")
 
@@ -92,12 +95,11 @@ class Useme(ScraperStrategy):
                 if parsed_offer:
                     offers.append(parsed_offer)
 
-            next_page_url = soup.find("a", rel="next")
+            next_page_url = self.get_next_page_url(soup, base_url)
             if not next_page_url:
                 break
 
-            if next_page_url:
-                url = base_url + next_page_url.get("href")
+            url = next_page_url
 
-        print(f"Scraped {len(offers)} offers")
+        print(f"Parsed {len(offers)} offers")
         return offers

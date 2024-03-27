@@ -19,7 +19,7 @@ def run_all_scraper(
 
     Args:
         websites (List[Optional[str]]): A list of website URLs to scrape.
-        worksheet (gspread.Worksheet): The worksheet to add scraped data to.
+        worksheet_url (str) The worksheet url.
         max_offer_duration_days
         keywords_to_pass (List[Optional[str]])
     Returns:

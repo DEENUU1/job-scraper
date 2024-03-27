@@ -1,8 +1,8 @@
 import requests
 from .abc.scraper_strategy import ScraperStrategy
 from typing import Optional, List
-from schemas.offer_schema import OfferInput
-from datetime import datetime, timedelta
+from schemas.offer import Offer
+from datetime import datetime
 from dateutil.parser import parse
 
 
@@ -18,10 +18,18 @@ class OLX(ScraperStrategy):
         different = today - parsed_created_time
 
         result = different.days <= max_offer_duration_days
-        print(f"Result: {result}")
         return result
 
-    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
+    @staticmethod
+    def get_next_page_url(data) -> Optional[str]:
+        next_page_element = data.get("links").get("next")
+
+        if not next_page_element:
+            return None
+
+        return next_page_element.get("href")
+
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[Offer]]:
         """
         Scrape job offers from OLX website.
 
@@ -29,17 +37,18 @@ class OLX(ScraperStrategy):
             url (str): The base URL to start scraping from.
             max_offer_duration_days
         Returns:
-            List[Optional[OfferInput]]: A list of scraped offer inputs.
+            List[Optional[Offer]]: A list of scraped offer inputs.
         """
-        print("Run OLX scraper")
 
         base_url = url
         offers = []
 
         while True:
             response = requests.get(base_url)
-            print(f"Status code: {response.status_code}")
             data = response.json()
+
+            if not data:
+                break
 
             for d in data["data"]:
                 title = d.get("title")
@@ -48,19 +57,16 @@ class OLX(ScraperStrategy):
                 if not title or not offer_url:
                     continue
 
-                if max_offer_duration_days:
-                    if not self.check_date(d.get("created_time"), max_offer_duration_days):
-                        continue
+                if max_offer_duration_days and not self.check_date(d.get("created_time"), max_offer_duration_days):
+                    continue
 
-                offers.append(OfferInput(title=title, url=offer_url))
+                offers.append(Offer(title=title, url=offer_url))
 
-            next_page_element = data.get("links").get("next")
-
-            if not next_page_element:
+            next_page_url = self.get_next_page_url(data)
+            if not next_page_url:
                 break
 
-            if next_page_element:
-                base_url = next_page_element.get("href")
+            base_url = next_page_url
 
         print(f"Scraped {len(offers)} offers")
         return offers

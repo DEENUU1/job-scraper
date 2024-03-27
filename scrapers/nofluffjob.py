@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from schemas.offer_schema import OfferInput
+from schemas.offer import Offer
 from utils.get_driver import get_driver
 from .abc.scraper_strategy import ScraperStrategy
 
@@ -60,8 +60,8 @@ class Nofluffjob(ScraperStrategy):
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "button.tw-btn.tw-btn-primary.tw-px-8.tw-block.tw-btn-xl"))
             )
             driver.execute_script("arguments[0].click();", consent_button)
-        except Exception as e:
-            print(e)
+        except:
+            pass
 
     @staticmethod
     def click_country(driver) -> None:
@@ -77,11 +77,11 @@ class Nofluffjob(ScraperStrategy):
                     (By.CSS_SELECTOR, "button.tw-btn.tw-btn-xl.tw-text-gray-30.mr-3.ng-star-inserted"))
             )
             consent_button.click()
-        except Exception as e:
-            print(e)
+        except:
+            pass
 
     @staticmethod
-    def parse_offers(data) -> List[Optional[OfferInput]]:
+    def parse_offers(data) -> List[Optional[Offer]]:
         """
         Parse job offers from HTML data.
 
@@ -89,26 +89,32 @@ class Nofluffjob(ScraperStrategy):
             data: List of HTML data.
 
         Returns:
-            List[Optional[OfferInput]]: A list of parsed offer inputs.
+            List[Optional[Offer]]: A list of parsed offer inputs.
         """
-        offers = []
-        unique_urls = []
+        offers, unique_urls = [], []
+
         for d in data:
             soup = BeautifulSoup(d, "html.parser")
             target_url = soup.find("a", href=lambda href: href and "pl/job" in href)
-            if target_url:
-                url = target_url.get("href")
-                title = target_url.find("h3")
+            if not target_url:
+                continue
 
-                if title and url not in unique_urls:
-                    unique_urls.append(url)
+            url = target_url.get("href")
+            title = target_url.find("h3")
 
-                    full_url = f"nofluffjobs.com{url}"
-                    offers.append(OfferInput(title=title.text, url=full_url))
+            if not url or not title:
+                continue
+
+            if url in unique_urls:
+                continue
+
+            unique_urls.append(url)
+            full_url = f"nofluffjobs.com{url}"
+            offers.append(Offer(title=title.text, url=full_url))
 
         return offers
 
-    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[Offer]]:
         """
         Scrape job offers from Nofluffjob website.
 
@@ -116,19 +122,18 @@ class Nofluffjob(ScraperStrategy):
             url (str): The base URL to start scraping from.
             max_offer_duration_days
         Returns:
-            List[Optional[OfferInput]]: A list of scraped offer inputs.
+            List[Optional[Offer]]: A list of scraped offer inputs.
         """
-        print(f"Run Nofluffjob scraper")
-
         driver = get_driver()
         driver.get(url)
         self.click_country(driver)
 
         data = []
 
-        def scrape_callback(driver) -> None:
+        def scrape_callback(driver_object) -> None:
             self.click_get_more(driver)
-            a_elements = driver.find_elements(By.TAG_NAME, "a")
+
+            a_elements = driver_object.find_elements(By.TAG_NAME, "a")
             for element in a_elements:
                 data.append(element.get_attribute("outerHTML"))
 
@@ -136,5 +141,5 @@ class Nofluffjob(ScraperStrategy):
 
         parsed_offers = self.parse_offers(data)
 
-        print(f"Scraped {len(parsed_offers)} offers")
+        print(f"Parsed {len(parsed_offers)} offers")
         return parsed_offers

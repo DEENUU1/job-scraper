@@ -1,6 +1,6 @@
 from typing import Optional, List
 from bs4 import BeautifulSoup
-from schemas.offer_schema import OfferInput
+from schemas.offer import Offer
 from .abc.scraper_strategy import ScraperStrategy
 from utils.get_driver import get_driver
 
@@ -14,7 +14,6 @@ class Indeed(ScraperStrategy):
     def check_date(offer, max_offer_duration_days: int) -> bool:
         date_span = offer.find("span", {"data-testid": "myJobsStateDate"})
         if not date_span:
-            print("No date span found")
             return False
 
         date_text = date_span.text.strip()
@@ -29,15 +28,12 @@ class Indeed(ScraperStrategy):
                     num_of_days += char
 
         if not num_of_days:
-            print("Invalid number of days")
             return False
 
         result = int(num_of_days) <= max_offer_duration_days
-        print(f"Result: {result}")
-
         return result
 
-    def parse_offer(self, offer, max_offer_duration_days: Optional[int] = None) -> Optional[OfferInput]:
+    def parse_offer(self, offer, max_offer_duration_days: Optional[int] = None) -> Optional[Offer]:
         """
         Parses an offer element and extracts relevant information.
 
@@ -45,25 +41,50 @@ class Indeed(ScraperStrategy):
             offer: The offer element to parse.
             max_offer_duration_days
         Returns:
-            Optional[OfferInput]: The parsed offer input if successful, None otherwise.
+            Optional[Offer]: The parsed offer input if successful, None otherwise.
         """
         offer_url = offer.find("a", class_="jcs-JobTitle")
-        if offer_url:
-            title = offer_url.find("span")
-            if title is None:
-                return None
+        if not offer_url:
+            return None
 
-            full_url = f"indeed.com{offer_url.get("href")}"
+        title = offer_url.find("span")
+        if title is None:
+            return None
 
-            if max_offer_duration_days:
-                if not self.check_date(offer, max_offer_duration_days):
-                    return None
+        full_url = f"indeed.com{offer_url.get("href")}"
+        processed_url = self.process_url(full_url)
 
-            return OfferInput(url=full_url, title=title.text)
+        if max_offer_duration_days and not self.check_date(offer, max_offer_duration_days):
+            return None
 
-        return None
+        return Offer(url=processed_url, title=title.text)
 
-    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
+    @staticmethod
+    def process_url(url: str) -> str:
+        base_url, query_string = url.split("?")
+
+        query_params = query_string.split("&")
+
+        jk_value = None
+
+        for param in query_params:
+            key, value = param.split("=")
+            if key == "jk":
+                jk_value = value
+                break
+
+        result = f"indeed.com/rc/clk?jk={jk_value}&bb=" if jk_value else None
+        return result
+
+    @staticmethod
+    def get_next_url(soup) -> Optional[str]:
+        next_page_button = soup.find("a", {"data-testid": "pagination-page-next"})
+        if not next_page_button:
+            return None
+
+        return "https://pl.indeed.com" + next_page_button.get("href")
+
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[Offer]]:
         """
         Scrapes job offers from Indeed website.
 
@@ -71,10 +92,8 @@ class Indeed(ScraperStrategy):
             url (str): The base URL to start scraping from.
             max_offer_duration_days
         Returns:
-            List[Optional[OfferInput]]: A list of scraped offer inputs.
+            List[Optional[Offer]]: A list of scraped offer inputs.
         """
-        print("Run Indeed scraper")
-
         offers = []
         base_url = url
 
@@ -82,11 +101,16 @@ class Indeed(ScraperStrategy):
 
         while True:
             driver.get(base_url)
-
             page_source = driver.page_source
+
+            if not page_source:
+                break
+
+            print(f"Successfully visited: {url}")
 
             soup = BeautifulSoup(page_source, "html.parser")
             job_elements = soup.find_all("li", class_="css-5lfssm")
+
             print(f"Found {len(job_elements)} elements")
 
             for offer in job_elements:
@@ -94,12 +118,12 @@ class Indeed(ScraperStrategy):
                 if parsed_offer:
                     offers.append(parsed_offer)
 
-            next_page_button = soup.find("a", {"data-testid": "pagination-page-next"})
-            if not next_page_button:
+            next_url = self.get_next_url(soup)
+            if not next_url:
                 break
+            base_url = next_url
 
-            if next_page_button:
-                base_url = "https://pl.indeed.com" + next_page_button.get("href")
+        print(f"Parsed {len(offers)} offers")
 
-        print(f"Scraped {len(offers)} offers")
+        driver.quit()
         return offers

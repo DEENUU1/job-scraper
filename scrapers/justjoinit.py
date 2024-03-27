@@ -4,7 +4,7 @@ from typing import Optional, List
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 
-from schemas.offer_schema import OfferInput
+from schemas.offer import Offer
 from utils.get_driver import get_driver
 from .abc.scraper_strategy import ScraperStrategy
 
@@ -34,6 +34,7 @@ class JustJoinIT(ScraperStrategy):
             if elements:
                 for element in elements:
                     data.append(element.get_attribute("outerHTML"))
+
             driver.execute_script(
                 f"window.scrollBy(0, 500);"
             )
@@ -76,7 +77,7 @@ class JustJoinIT(ScraperStrategy):
             self,
             data: List[Optional[str]],
             max_offer_duration_days: Optional[int] = None
-    ) -> List[Optional[OfferInput]]:
+    ) -> List[Optional[Offer]]:
         """
         Parses job offer data from HTML content.
 
@@ -84,13 +85,13 @@ class JustJoinIT(ScraperStrategy):
             data (List[Optional[str]]): A list of HTML content strings.
             max_offer_duration_days
         Returns:
-            List[Optional[OfferInput]]: A list of parsed offer inputs.
+            List[Optional[Offer]]: A list of parsed offer inputs.
         """
         if not data:
             return []
 
-        unique_urls = []
-        offers = []
+        unique_urls, offers = [], []
+
         for d in data:
             soup = BeautifulSoup(d, "html.parser")
             title = soup.find("h2")
@@ -102,19 +103,19 @@ class JustJoinIT(ScraperStrategy):
             title = title.text
             url = url.get("href")
 
-            if max_offer_duration_days:
-                if not self.check_date(soup, max_offer_duration_days):
-                    continue
+            if max_offer_duration_days and not self.check_date(soup, max_offer_duration_days):
+                continue
 
-            if url not in unique_urls:
-                unique_urls.append(url)
+            if url in unique_urls:
+                continue
 
-                full_url = f"justjoin.it{url}"
-                offers.append(OfferInput(title=title, url=full_url))
+            unique_urls.append(url)
+            full_url = f"justjoin.it{url}"
+            offers.append(Offer(title=title, url=full_url))
 
         return offers
 
-    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[Offer]]:
         """
         Scrapes job offers from JustJoinIT website.
 
@@ -122,15 +123,13 @@ class JustJoinIT(ScraperStrategy):
             url (str): The base URL to start scraping from.
             max_offer_duration_days
         Returns:
-            List[Optional[OfferInput]]: A list of scraped offer inputs.
+            List[Optional[Offer]]: A list of scraped offer inputs.
         """
-        print("Run JustJoinIT scraper")
-
         driver = get_driver()
         driver.get(url)
 
         data = self.get_content(driver)
         parsed_offers = self.parse_offers(data, max_offer_duration_days)
 
-        print(f"Scraped {len(parsed_offers)} offers")
+        print(f"Parsed {len(parsed_offers)} offers")
         return parsed_offers

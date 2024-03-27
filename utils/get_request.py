@@ -14,7 +14,11 @@ def get_request(url: str):
     try:
         response = requests.get(url)
         response.raise_for_status()
+
+        print(f"Successfully visited {url}")
         return response
+
     except Exception as e:
         print(e)
+        print(f"Failed to visit {url}")
         return None

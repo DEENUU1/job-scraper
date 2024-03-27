@@ -2,10 +2,9 @@ from typing import Optional, List
 
 from bs4 import BeautifulSoup
 
-from schemas.offer_schema import OfferInput
+from schemas.offer import Offer
 from utils.get_request import get_request
 from .abc.scraper_strategy import ScraperStrategy
-from utils.theprotocol_process_url import theprotocol_remove_search_id
 
 
 class TheProtocol(ScraperStrategy):
@@ -14,7 +13,11 @@ class TheProtocol(ScraperStrategy):
     """
 
     @staticmethod
-    def parse_offer(offer) -> Optional[OfferInput]:
+    def remove_search_id(url: str) -> str:
+        url_parts = url.split("?")
+        return url_parts[0]
+
+    def parse_offer(self, offer) -> Optional[Offer]:
         """
         Parse a job offer from the HTML representation.
 
@@ -22,18 +25,19 @@ class TheProtocol(ScraperStrategy):
             offer: HTML representation of the job offer.
 
         Returns:
-            Optional[OfferInput]: Parsed job offer input.
+            Optional[Offer]: Parsed job offer input.
         """
         title = offer.find("h2", class_="titleText_te02th1")
         offer_url = offer.get("href")
 
         if not title or not offer_url:
             return None
-        full_url = f"https://theprotocol.it{offer_url}"
-        processed_url = theprotocol_remove_search_id(full_url)
-        return OfferInput(url=processed_url, title=title.text)
 
-    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[OfferInput]]:
+        full_url = f"https://theprotocol.it{offer_url}"
+        processed_url = self.remove_search_id(full_url)
+        return Offer(url=processed_url, title=title.text)
+
+    def scrape(self, url: str, max_offer_duration_days: Optional[int] = None) -> List[Optional[Offer]]:
         """
         Scrape job offers from TheProtocol website.
 
@@ -41,10 +45,8 @@ class TheProtocol(ScraperStrategy):
             url (str): The base URL to start scraping from.
             max_offer_duration_days (int)
         Returns:
-            List[Optional[OfferInput]]: A list of scraped offer inputs.
+            List[Optional[Offer]]: A list of scraped offer inputs.
         """
-        print("Run TheProtocol scraper")
-
         base_url = url
         page_number = 1
         offers = []
@@ -52,7 +54,9 @@ class TheProtocol(ScraperStrategy):
         while True:
             url = f"{base_url}&pageNumber={page_number}"
             response = get_request(url)
-            print(f"Status code: {response.status_code}")
+
+            if not response:
+                break
 
             soup = BeautifulSoup(response.text, 'html.parser')
             job_offers = soup.find_all("a", class_="anchorClass_aqdsolh")
@@ -68,5 +72,5 @@ class TheProtocol(ScraperStrategy):
             if not job_offers:
                 break
 
-        print(f"Scraped {len(offers)} offers")
+        print(f"Parsed {len(offers)} offers")
         return offers

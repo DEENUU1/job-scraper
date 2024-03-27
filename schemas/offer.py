@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
-class OfferInput(BaseModel):
+
+class Offer(BaseModel):
     """
     Pydantic BaseModel representing input data for an offer.
 

@@ -1,6 +1,6 @@
 import gspread
 from utils.get_current_date import get_current_date
-from schemas.offer_schema import OfferInput
+from schemas.offer import Offer
 
 
 class GoogleSheet:
@@ -54,11 +54,11 @@ class GoogleSheet:
             print(e)
             return False
 
-    def add_data(self, data: OfferInput, website: str) -> None:
+    def add_data(self, data: Offer, website: str) -> None:
         """Add data to the Google Sheet.
 
         Args:
-            data (OfferInput): The offer data to add.
+            data (Offer): The offer data to add.
             website (str): The website associated with the offer.
         """
         try:

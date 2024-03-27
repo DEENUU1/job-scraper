@@ -1,5 +1,5 @@
 from typing import Protocol, List, Optional
-from schemas.offer_schema import OfferInput
+from schemas.offer import Offer
 
 
 class ScraperStrategy(Protocol):
@@ -10,7 +10,7 @@ class ScraperStrategy(Protocol):
             self,
             url: str,
             max_offer_duration_days: Optional[int] = None
-    ) -> List[Optional[OfferInput]]:
+    ) -> List[Optional[Offer]]:
         """
         Scrapes data from a given URL.
 
@@ -18,6 +18,6 @@ class ScraperStrategy(Protocol):
             url (str): The URL to scrape.
             max_offer_duration_days (int): The maximum number of days
         Returns:
-            List[Optional[OfferInput]]: A list of scraped offer inputs.
+            List[Optional[Offer]]: A list of scraped offer inputs.
         """
         ...
