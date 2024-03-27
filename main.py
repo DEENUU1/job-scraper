@@ -1,4 +1,3 @@
-from googlesheet.init_gs import get_worksheet
 from tasks.run_all_scrapers import run_all_scraper
 from utils.get_config import get_config
 import os
@@ -18,13 +17,13 @@ def main() -> None:
     """
     config = get_config()
 
-    sh = get_worksheet()  # Get the Google Sheet worksheet
+    worksheet_url = config["url"]
     websites = config["websites"]  # Get the list of websites from configuration
     max_offer_duration_days = config["max_offer_duration_days"]  # Get the maximum offer duration from configuration
     keywords_to_pass = config["keywords_to_pass"]
 
     # Run all scrapers for the given websites and add data to the worksheet
-    run_all_scraper(websites, sh, max_offer_duration_days, keywords_to_pass)
+    run_all_scraper(websites, worksheet_url, max_offer_duration_days, keywords_to_pass)
 
 
 if __name__ == '__main__':
