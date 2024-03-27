@@ -205,6 +205,8 @@ pip install -r requirements.txt
 #### Run script
 ```bash
 python main.py
+
+# On windows you can run `run.ps1` powershell script
 ```
 
 ### With docker
@@ -217,13 +219,6 @@ docker build -t scraper .
 ```bash
 docker run scraper
 ```
-
-
-### .exe file
-1. Get .exe file from `assets/main.rar`
-2. Unpack `main.rar`
-3. Inside `main` directory (where `main.exe` is located) add `credentiials.json` file and configure `config.json`
-
 
 ## Authors
 

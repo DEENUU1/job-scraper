@@ -19,11 +19,20 @@ def add_data_to_sheet(
     Returns:
         None
     """
-    row_data = [
-        data.title,
-        data.url,
-        website,
-        str(get_current_date())
-    ]
-    worksheet.insert_row(row_data, index=2)
-    print("Save data to Google Sheet")
+    try:
+        row_data = [
+            data.title,
+            data.url,
+            website,
+            str(get_current_date())
+        ]
+        worksheet.insert_row(row_data, index=2)
+        print("Save data to Google Sheet")
+
+    except gspread.exceptions.APIError as e:
+        print(e)
+        return
+
+    except Exception as e:
+        print(e)
+        return
