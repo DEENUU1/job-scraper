@@ -162,7 +162,7 @@ https://useme.com/pl/jobs/category/serwisy-internetowe,34/sklepy-internetowe,97/
 git clone https://github.com/DEENUU1/job-scraper.git
 ```
 
-#### Set up your Google Account
+#### Set up your Google Account (you can skip this part if you want to save data locally in .xlsx file)
 1. Go to <a href="https://console.cloud.google.com/welcome?project=private-418116">Google Console</a>
 2. Create or choose existing project <a href="https://developers.google.com/workspace/guides/create-project?hl=pl">Tutorial</a>
 3. Go to Navigation Menu and select APIs & Services and then Credentials
@@ -181,8 +181,9 @@ git clone https://github.com/DEENUU1/job-scraper.git
 16. Add link to `config.json` in field `url`
 
 #### Config set up
-- `url` is dedicated for Google Sheet
+- `url` is dedicated for Google Sheet 
 - `keywords_to_pass` List of keywords after which offers are to be skipped
+- `export_type` Here you can type "excel" or "googlesheet" if you choose "excel" data will be saved locally in .xlsx file and if you want to save data in Google Sheet choose "googlesheet" 
 - `max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
 - `websites` here you can add multiple urls from which you want to scrape job offers
 

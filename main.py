@@ -21,9 +21,10 @@ def main() -> None:
     websites = config["websites"]  # Get the list of websites from configuration
     max_offer_duration_days = config["max_offer_duration_days"]  # Get the maximum offer duration from configuration
     keywords_to_pass = config["keywords_to_pass"]
+    export_type = config["export_type"]
 
     # Run all scrapers for the given websites and add data to the worksheet
-    run_all_scraper(websites, worksheet_url, max_offer_duration_days, keywords_to_pass)
+    run_all_scraper(websites, worksheet_url, export_type, max_offer_duration_days, keywords_to_pass)
 
 
 if __name__ == '__main__':

@@ -1,16 +1,18 @@
+import time
 from typing import List, Optional
-import gspread
+
+from export.googlesheet import GoogleSheet
 from scrapers.abc.scraper import Scraper
 from utils.map_url_to_scraper import url_to_scraper
-import time
 from utils.urls_to_skip import get_urls_to_skip
 from utils.validate_title_keywords import check_title
-from googlesheet.googlesheet import GoogleSheet
+from export.excel import ExcelWriter
 
 
 def run_all_scraper(
         websites: List[Optional[str]],
         worksheet_url: str,
+        export_type: str = "excel",  # or 'googlesheet'
         max_offer_duration_days: Optional[int] = None,
         keywords_to_pass: List[Optional[str]] = None,
 ) -> None:
@@ -20,6 +22,7 @@ def run_all_scraper(
     Args:
         websites (List[Optional[str]]): A list of website URLs to scrape.
         worksheet_url (str) The worksheet url.
+        export_type (str)
         max_offer_duration_days
         keywords_to_pass (List[Optional[str]])
     Returns:
@@ -35,10 +38,9 @@ def run_all_scraper(
         scraper_class, website = url_to_scraper(url)
         if not scraper_class:
             print("Invalid URL or website is not supported")
-            return
+            continue
 
         scraped_offers = Scraper(scraper_class).scrape(url, max_offer_duration_days)
-        print(len(scraped_offers))
         for offer in scraped_offers:
             if offer.url in urls_to_skip:
                 print("Offer skipped")
@@ -48,13 +50,29 @@ def run_all_scraper(
                 print(f"Offer skipped: {offer.title}")
                 continue
 
-            gs = GoogleSheet(worksheet_url)
+            if export_type == "excel":
+                ew = ExcelWriter()
 
-            if gs.data_exists(2, offer.url):
-                print("Offer exists in google sheet")
-                time.sleep(2)  # Rate limit Google Sheet API (60 requests per minute)
-                continue
+                if ew.data_exists(url=offer.url):
+                    print("Offer exists in excel")
+                    continue
 
-            time.sleep(2)  # Rate limit Google Sheet API (60 requests per minute)
+                ew.add_data(data=offer, website=website)
+                ew.save()
 
-            gs.add_data(data=offer, website=website)
+            elif export_type == "googlesheet":
+                gs = GoogleSheet(worksheet_url)
+
+                if gs.data_exists(2, offer.url):
+                    print("Offer exists in google sheet")
+                    # Rate limit Google Sheet API (60 requests per minute)
+                    time.sleep(2)
+                    continue
+
+                # Rate limit Google Sheet API (60 requests per minute)
+                time.sleep(2)
+
+                gs.add_data(data=offer, website=website)
+
+            else:
+                raise ValueError("Invalid export type")
