@@ -2,6 +2,7 @@ database.db
 .idea/
 credentials.json
 urls_to_skip.txt
+job_offers.xlsx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

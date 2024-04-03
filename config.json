@@ -2,7 +2,7 @@
   "url": "",
   "max_offer_duration_days": 3,
   "keywords_to_pass": ["senior", "devops", "embedded"],
-  "export_type": "excel",
+  "export_type": "googlesheet",
   "websites": [
         "https://www.pracuj.pl/praca/zdunska%20wola;wp/ostatnich%203%20dni;p,3?rd=10&et=17%2C3%2C1%2C2&sc=0&iwhpl=true",
         "https://it.pracuj.pl/praca?et=17%2C1%2C3&itth=37&tt=Python&jobboardversion=2",
