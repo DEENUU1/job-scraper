@@ -56,6 +56,7 @@ def run_all_scraper(
                 print(f"Offer skipped: {offer.title}")
                 continue
 
+            # Save data to .xlsx file
             if export_type == "excel":
                 ew = ExcelWriter()
 
@@ -66,6 +67,8 @@ def run_all_scraper(
                 ew.add_data(data=offer, website=website)
                 ew.save()
 
+            # Save data to Google Sheet
+            # This option is the slowest because of API rate limit
             elif export_type == "googlesheet":
                 gs = GoogleSheet(worksheet_url)
 
@@ -80,6 +83,8 @@ def run_all_scraper(
 
                 gs.add_data(data=offer, website=website)
 
+            # Save data to SQLite database
+            # Then you are able to run local server based on FastAPI and Jinja Template
             elif export_type == "db" and offer_service:
                 offer_service.create(offer, website)
 

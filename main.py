@@ -12,12 +12,15 @@ if not os.path.exists("urls_to_skip.txt"):
 config = get_config()
 
 worksheet_url = config["url"]
-websites = config["websites"]  # Get the list of websites from configuration
-max_offer_duration_days = config["max_offer_duration_days"]  # Get the maximum offer duration from configuration
+# Get the list of websites from configuration
+websites = config["websites"]
+# Get the maximum offer duration from configuration
+max_offer_duration_days = config["max_offer_duration_days"]
 keywords_to_pass = config["keywords_to_pass"]
 export_type = config["export_type"]
 
 if export_type == "db":
+    # Create the Offer table if it doesn't exist
     Offer.metadata.create_all(bind=engine)
 
 
@@ -29,7 +32,13 @@ def main() -> None:
         None
     """
 
-    run_all_scraper(websites, worksheet_url, export_type, max_offer_duration_days, keywords_to_pass)
+    run_all_scraper(
+        websites,
+        worksheet_url,
+        export_type,
+        max_offer_duration_days,
+        keywords_to_pass
+    )
 
 
 if __name__ == '__main__':

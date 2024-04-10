@@ -1,5 +1,3 @@
-from http.client import HTTPException
-
 from utils.get_config import get_config
 
 config = get_config()

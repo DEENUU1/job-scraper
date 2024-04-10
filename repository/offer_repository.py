@@ -9,9 +9,22 @@ from sqlalchemy import asc, desc, func
 class OfferRepository:
 
     def __init__(self, session: Session):
+        """
+        Initializes the OfferRepository with a database session.
+
+        Args:
+            session (sqlalchemy.orm.Session): The database session to use for operations.
+        """
         self.session = session
 
     def create(self, data: Offer, website: str) -> None:
+        """
+        Creates a new offer in the database.
+
+        Args:
+            data (Offer): The offer data to be saved.
+            website (str): The website where the offer was found.
+        """
         db_offer = OfferModel(
             title=data.title,
             url=data.url,
@@ -24,12 +37,40 @@ class OfferRepository:
         return
 
     def offer_exists_by_url(self, url: str) -> bool:
+        """
+        Checks if an offer with the given URL already exists in the database.
+
+        Args:
+            url (str): The URL of the offer to check.
+
+        Returns:
+            bool: True if the offer exists, False otherwise.
+        """
         return self.session.query(OfferModel).filter(OfferModel.url == url).first() is not None
 
     def offer_exists_by_id(self, _id: int) -> bool:
+        """
+        Checks if an offer with the given ID exists in the database.
+
+        Args:
+            _id (int): The ID of the offer to check.
+
+        Returns:
+            bool: True if the offer exists, False otherwise.
+        """
         return self.session.query(OfferModel).filter(OfferModel.id == _id).first() is not None
 
     def change_check_status(self, _id: int, status: bool) -> bool:
+        """
+        Updates the "checked" status of an offer.
+
+        Args:
+            _id (int): The ID of the offer to update.
+            status (bool): The new checked status (True or False).
+
+        Returns:
+            bool: Always True upon successful update.
+        """
         db_offer = self.session.query(OfferModel).filter(OfferModel.id == _id).first()
         db_offer.check = status
         self.session.commit()
@@ -43,6 +84,19 @@ class OfferRepository:
             query: str = None,
             sort_by: OfferSortEnum = OfferSortEnum.NEWEST
     ) -> OfferListOutput:
+        """
+        Retrieves a paginated list of offers with filtering and sorting options.
+
+        Args:
+            page (int, optional): The current page number (defaults to 1).
+            page_limit (int, optional): The number of offers per page (defaults to 50).
+            query (str, optional): A search string to filter offers by title.
+            sort_by (OfferSortEnum, optional): The sorting criteria for offers (defaults to newest).
+
+        Returns:
+            OfferListOutput: An object containing the list of offers, pagination information,
+                             and total number of offers.
+        """
 
         total_offers_query = self.session.query(func.count(OfferModel.id))
 
@@ -67,4 +121,8 @@ class OfferRepository:
 
         offers_list = [OfferOutput(**offer.__dict__) for offer in offers]
 
-        return OfferListOutput(offers=offers_list, prev_page=prev_page, next_page=next_page)
+        return OfferListOutput(
+            offers=offers_list,
+            prev_page=prev_page,
+            next_page=next_page
+        )
