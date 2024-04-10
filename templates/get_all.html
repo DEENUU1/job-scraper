@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Job scraper</title>
     <link href="{{ url_for('static', path='/get_all.css')}}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', path='/update_status.js')}}"></script>
 </head>
 <body>
 
@@ -14,7 +16,6 @@
         <select name="sort_by">
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
-          <!-- Add other sorting options as needed -->
         </select>
         <button type="submit">Apply Filters</button>
       </form>
@@ -32,7 +33,7 @@
     <tbody>
         {% for offer in offers %}
         <tr>
-          <td><input type="checkbox" value="{{offer.check}}"></td>
+          <td><input type="checkbox" value="{{offer.check}}" data-id="{{offer.id}}"></td>
           <td><a href="{{offer.url}}">{{ offer.title }}</a></td>
           <td>{{ offer.page }}</td>
           <td>{{ offer.created_at }}</td>
@@ -40,6 +41,7 @@
       {% endfor %}
     </tbody>
   </table>
+
 
 
 </body>

@@ -6,6 +6,8 @@ from enums.sort_by import OfferSortEnum
 from repository.offer_repository import OfferRepository
 from schemas.offer import Offer, OfferOutput
 
+from fastapi import HTTPException
+
 
 class OfferService:
     def __init__(self, session: Session):
@@ -38,4 +40,7 @@ class OfferService:
         )
 
     def change_check_status(self, _id: int, status: bool) -> bool:
+        if not self.repository.offer_exists_by_id(_id):
+            raise HTTPException(status_code=404, detail="Offer not found")
+
         return self.repository.change_check_status(_id, status)

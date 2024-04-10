@@ -26,12 +26,14 @@ class OfferRepository:
     def offer_exists_by_url(self, url: str) -> bool:
         return self.session.query(OfferModel).filter(OfferModel.url == url).first() is not None
 
+    def offer_exists_by_id(self, _id: int) -> bool:
+        return self.session.query(OfferModel).filter(OfferModel.id == _id).first() is not None
+
     def change_check_status(self, _id: int, status: bool) -> bool:
         db_offer = self.session.query(OfferModel).filter(OfferModel.id == _id).first()
-        if db_offer is None:
-            return False
-        db_offer.checked = status
+        db_offer.check = status
         self.session.commit()
+        self.session.refresh(db_offer)
         return True
 
     def get_all(
