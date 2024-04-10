@@ -9,7 +9,8 @@ if export_type != "db":
 from fastapi import FastAPI
 from config.database import engine
 from models.offer import Offer
-
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 Offer.metadata.create_all(bind=engine)
 
@@ -19,5 +20,8 @@ app = FastAPI(
     title="Job scraper"
 )
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
 
 

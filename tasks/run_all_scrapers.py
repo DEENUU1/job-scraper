@@ -1,18 +1,20 @@
 import time
 from typing import List, Optional
 
+from config.database import get_db
 from export.googlesheet import GoogleSheet
 from scrapers.abc.scraper import Scraper
 from utils.map_url_to_scraper import url_to_scraper
 from utils.urls_to_skip import get_urls_to_skip
 from utils.validate_title_keywords import check_title
 from export.excel import ExcelWriter
+from service.offer_service import OfferService
 
 
 def run_all_scraper(
         websites: List[Optional[str]],
         worksheet_url: str,
-        export_type: str = "excel",  # or 'googlesheet'
+        export_type: str = "excel",  # or 'googlesheet' or 'db'
         max_offer_duration_days: Optional[int] = None,
         keywords_to_pass: List[Optional[str]] = None,
 ) -> None:
@@ -75,7 +77,9 @@ def run_all_scraper(
                 gs.add_data(data=offer, website=website)
 
             elif export_type == "db":
-                pass
+                offer_service = OfferService(next(get_db()))
+                offer_service.create(offer, website)
+
 
             else:
                 raise ValueError("Invalid export type")
