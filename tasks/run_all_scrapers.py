@@ -37,6 +37,10 @@ def run_all_scraper(
         return
 
     for url in websites:
+        offer_service = None
+        if export_type == "db":
+            offer_service = OfferService(next(get_db()))
+
         scraper_class, website = url_to_scraper(url)
         if not scraper_class:
             print("Invalid URL or website is not supported")
@@ -76,10 +80,8 @@ def run_all_scraper(
 
                 gs.add_data(data=offer, website=website)
 
-            elif export_type == "db":
-                offer_service = OfferService(next(get_db()))
+            elif export_type == "db" and offer_service:
                 offer_service.create(offer, website)
-
 
             else:
                 raise ValueError("Invalid export type")

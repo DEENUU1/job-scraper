@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+from typing import Optional
+
 
 class Offer(BaseModel):
     """
@@ -21,3 +23,9 @@ class OfferOutput(BaseModel):
     page: str
     check: bool = False
     created_at: datetime
+
+
+class OfferListOutput(BaseModel):
+    offers: list[OfferOutput]
+    prev_page: Optional[int] = None
+    next_page: Optional[int] = None

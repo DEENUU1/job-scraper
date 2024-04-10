@@ -44,6 +44,8 @@ def update_check_status(data: OfferStatusUpdate, session: Session = Depends(get_
 def get_all(
         request: Request,
         session: Session = Depends(get_db),
+        page: int = Query(1),
+        page_limit: int = Query(50),
         query: Optional[str] = Query(None),
         checked: Optional[bool] = Query(None),
         unchecked: Optional[bool] = Query(None),
@@ -52,7 +54,14 @@ def get_all(
 
     offer_service = OfferService(session)
 
-    offers = offer_service.get_all(query=query, checked=checked, unchecked=unchecked, sort_by=sort_by)
+    offers = offer_service.get_all(
+        page=page,
+        page_limit=page_limit,
+        query=query,
+        checked=checked,
+        unchecked=unchecked,
+        sort_by=sort_by
+    )
 
     return templates.TemplateResponse(
         request=request,

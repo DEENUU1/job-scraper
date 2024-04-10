@@ -68,10 +68,13 @@ class Indeed(ScraperStrategy):
         jk_value = None
 
         for param in query_params:
-            key, value = param.split("=")
-            if key == "jk":
-                jk_value = value
-                break
+            try:
+                key, value = param.split("=")
+                if key == "jk":
+                    jk_value = value
+                    break
+            except ValueError:
+                pass
 
         result = f"indeed.com/rc/clk?jk={jk_value}&bb=" if jk_value else None
         return result

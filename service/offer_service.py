@@ -1,10 +1,8 @@
-from typing import List
-
 from sqlalchemy.orm import Session
 
 from enums.sort_by import OfferSortEnum
 from repository.offer_repository import OfferRepository
-from schemas.offer import Offer, OfferOutput
+from schemas.offer import Offer, OfferListOutput
 
 from fastapi import HTTPException
 
@@ -29,7 +27,7 @@ class OfferService:
             checked: bool = None,
             unchecked: bool = None,
             sort_by: OfferSortEnum = OfferSortEnum.NEWEST
-    ) -> List[OfferOutput]:
+    ) -> OfferListOutput:
         return self.repository.get_all(
             page,
             page_limit,

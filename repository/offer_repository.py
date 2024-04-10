@@ -1,9 +1,9 @@
 from typing import List
 from sqlalchemy.orm import Session
 from models.offer import Offer as OfferModel
-from schemas.offer import Offer, OfferOutput
+from schemas.offer import Offer, OfferOutput, OfferListOutput
 from enums.sort_by import OfferSortEnum
-from sqlalchemy import asc, desc
+from sqlalchemy import asc, desc, func
 
 
 class OfferRepository:
@@ -44,7 +44,10 @@ class OfferRepository:
             checked: bool = None,
             unchecked: bool = None,
             sort_by: OfferSortEnum = OfferSortEnum.NEWEST
-    ) -> List[OfferOutput]:
+    ) -> OfferListOutput:
+
+        total_offers_query = self.session.query(func.count(OfferModel.id))
+
         offers = self.session.query(OfferModel)
 
         if query is not None:
@@ -61,7 +64,15 @@ class OfferRepository:
         elif sort_by == OfferSortEnum.OLDEST:
             offers = offers.order_by(asc(OfferModel.created_at))
 
+        total_offers = total_offers_query.scalar()
+
+        total_pages = (total_offers + page_limit - 1) // page_limit
+        prev_page = max(page - 1, 1) if page > 1 else None
+        next_page = min(page + 1, total_pages) if page < total_pages else None
+
         offset = (page - 1) * page_limit if page > 0 else 0
         offers = offers.offset(offset).limit(page_limit).all()
 
-        return [OfferOutput(**offer.__dict__) for offer in offers]
+        offers_list = [OfferOutput(**offer.__dict__) for offer in offers]
+
+        return OfferListOutput(offers=offers_list, prev_page=prev_page, next_page=next_page)

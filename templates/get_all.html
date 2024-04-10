@@ -18,8 +18,16 @@
           <option value="oldest">Oldest</option>
         </select>
         <button type="submit">Apply Filters</button>
-      </form>
+    </form>
 
+  <div class="pagination">
+    {% if offers.prev_page %}
+      <a href="?page={{ offers.prev_page }}">Previous</a>
+    {% endif %}
+    {% if offers.next_page %}
+      <a href="?page={{ offers.next_page }}">Next</a>
+    {% endif %}
+  </div>
 
   <table id="data" class="table table-striped">
     <thead>
@@ -31,7 +39,7 @@
       </tr>
     </thead>
     <tbody>
-        {% for offer in offers %}
+        {% for offer in offers.offers %}
         <tr>
           <td><input type="checkbox" value="{{offer.check}}" data-id="{{offer.id}}"></td>
           <td><a href="{{offer.url}}">{{ offer.title }}</a></td>
@@ -42,7 +50,14 @@
     </tbody>
   </table>
 
-
+  <div class="pagination">
+    {% if offers.prev_page %}
+      <a href="?page={{ offers.prev_page }}">Previous</a>
+    {% endif %}
+    {% if offers.next_page %}
+      <a href="?page={{ offers.next_page }}">Next</a>
+    {% endif %}
+  </div>
 
 </body>
 </html>
