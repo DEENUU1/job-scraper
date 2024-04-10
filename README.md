@@ -12,7 +12,7 @@
   <h3 align="center">Job scraper</h3>
 
   <p align="center">
-    A program that allows you to scrape job offers from many websites and save new offers in Google Sheet
+    A program that allows you to scrape job offers from many websites and save new offers in Google Sheet, .XLSX file or SQLite database with local web application server support
     <br />
     <br />
     <a href="https://github.com/DEENUU1/tvtime-scraper/issues">Report Bug</a>
@@ -22,6 +22,7 @@
 </div>
 
 <img src="assets/gs.png" alt="google_sheet_results">
+<img src="assets/server.png" alt="local_server">
 
 ## Features
 
@@ -30,9 +31,10 @@
    - Implements the Strategy Pattern for scrapers, allowing flexibility in choosing the scraping method based on the website's structure.
    - Utilizes either requests + BeautifulSoup or Selenium, with Selenium capable of scrolling pages and handling pop-up windows.
 
-2. **Data Management and Storage:**
+2. **Data Management and Multi storage options:**
    - Scraped data is efficiently stored to prevent duplication.
-   - Integrated with Google Sheets for seamless data storage and accessibility.
+   - The application allows you to save data to Google Sheet, an .XLSX file or an SQLite database.
+By selecting the SQLite database, you can run a local server written in FastAPI to browse and filter the saved data
 
 3. **Customizable Scraping Parameters:**
    - Users can set specific links for supported job portals along with filters and sorting preferences for tailored scraping.
@@ -162,7 +164,7 @@ https://useme.com/pl/jobs/category/serwisy-internetowe,34/sklepy-internetowe,97/
 git clone https://github.com/DEENUU1/job-scraper.git
 ```
 
-#### Set up your Google Account (you can skip this part if you want to save data locally in .xlsx file)
+#### Set up your Google Account (you can skip this part if you want to save data locally in .xlsx file or in SQLite database)
 1. Go to <a href="https://console.cloud.google.com/welcome?project=private-418116">Google Console</a>
 2. Create or choose existing project <a href="https://developers.google.com/workspace/guides/create-project?hl=pl">Tutorial</a>
 3. Go to Navigation Menu and select APIs & Services and then Credentials
@@ -183,7 +185,7 @@ git clone https://github.com/DEENUU1/job-scraper.git
 #### Config set up
 - `url` is dedicated for Google Sheet 
 - `keywords_to_pass` List of keywords after which offers are to be skipped
-- `export_type` Here you can type "excel" or "googlesheet" if you choose "excel" data will be saved locally in .xlsx file and if you want to save data in Google Sheet choose "googlesheet" 
+- `export_type` Here you can type "excel", "googlesheet" or "db" if you choose "excel" data will be saved locally in .xlsx file, if you want to save data in Google Sheet choose "googlesheet" and if you want to use SQLite database + local web application to browse and filter data choose "db"
 - `max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
 - `websites` here you can add multiple urls from which you want to scrape job offers
 
@@ -203,23 +205,33 @@ https://www.pracuj.pl/praca/junior-devops-engineer-z-chmura-gcp-warszawa,oferta,
 pip install -r requirements.txt
 ```
 
-#### Run script
+#### Run scrapers
 ```bash
 python main.py
 
 # On windows you can run `run.ps1` powershell script
 ```
 
+#### If you set "db" in your config file you can run local server
+```bash
+uvicorn server:app
+
+# On windows you can run 'server.ps1' powershell script
+```
+
 ### With docker
+**I don't recommend to use Docker if you decided to save your data to SQLite. 
+I still need to refine this option, but for now I recommend using Docker in combination with Google Sheet or .XLSX files**
 #### Build image
 ```bash
 docker build -t scraper .
 ```
 
-#### Run script
+#### Run scrapers
 ```bash
 docker run scraper
 ```
+
 
 ## Authors
 
