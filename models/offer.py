@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, func
+from sqlalchemy import Column, String, Integer, DateTime, func, Boolean
 
 from config.database import Base
 
@@ -10,4 +10,5 @@ class Offer(Base):
     title = Column(String, nullable=False)
     url = Column(String, nullable=False, unique=True)
     page = Column(String, nullable=False)
+    check = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())

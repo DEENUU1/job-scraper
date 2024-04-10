@@ -11,3 +11,12 @@ class Offer(BaseModel):
     """
     title: str
     url: str
+
+
+class OfferOutput(BaseModel):
+    id: int
+    title: str
+    url: str
+    page: str
+    check: bool = False
+    created_at: str
