@@ -41,8 +41,6 @@ class OfferRepository:
             page: int = 1,
             page_limit: int = 50,
             query: str = None,
-            checked: bool = None,
-            unchecked: bool = None,
             sort_by: OfferSortEnum = OfferSortEnum.NEWEST
     ) -> OfferListOutput:
 
@@ -52,12 +50,6 @@ class OfferRepository:
 
         if query is not None:
             offers = offers.filter(OfferModel.title.like(f'%{query}%'))
-
-        if checked is not None:
-            offers = offers.filter(OfferModel.check == checked)
-
-        if unchecked is not None:
-            offers = offers.filter(OfferModel.check == unchecked)
 
         if sort_by == OfferSortEnum.NEWEST:
             offers = offers.order_by(desc(OfferModel.created_at))

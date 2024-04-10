@@ -47,8 +47,6 @@ def get_all(
         page: int = Query(1),
         page_limit: int = Query(50),
         query: Optional[str] = Query(None),
-        checked: Optional[bool] = Query(None),
-        unchecked: Optional[bool] = Query(None),
         sort_by: OfferSortEnum = OfferSortEnum.NEWEST
 ):
 
@@ -58,8 +56,6 @@ def get_all(
         page=page,
         page_limit=page_limit,
         query=query,
-        checked=checked,
-        unchecked=unchecked,
         sort_by=sort_by
     )
 

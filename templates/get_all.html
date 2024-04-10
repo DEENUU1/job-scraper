@@ -11,8 +11,6 @@
 
     <form method="get" action="/">
         <input type="text" name="query" placeholder="Search...">
-        <label><input type="checkbox" name="checked"> Checked</label>
-        <label><input type="checkbox" name="unchecked"> Unchecked</label>
         <select name="sort_by">
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
@@ -23,9 +21,13 @@
   <div class="pagination">
     {% if offers.prev_page %}
       <a href="?page={{ offers.prev_page }}">Previous</a>
+    {% else %}
+      <a aria-current="page" href="?page={{ offers.prev_page }}">Previous</a>
     {% endif %}
     {% if offers.next_page %}
       <a href="?page={{ offers.next_page }}">Next</a>
+    {% else %}
+      <a aria-current="page" href="?page={{ offers.next_page }}">Next</a>
     {% endif %}
   </div>
 
@@ -41,7 +43,9 @@
     <tbody>
         {% for offer in offers.offers %}
         <tr>
-          <td><input type="checkbox" value="{{offer.check}}" data-id="{{offer.id}}"></td>
+        <td>
+            <input type="checkbox" value="{{offer.check}}" data-id="{{offer.id}}" {% if offer.check %}checked{% endif %}/>
+        </td>
           <td><a href="{{offer.url}}">{{ offer.title }}</a></td>
           <td>{{ offer.page }}</td>
           <td>{{ offer.created_at }}</td>
@@ -53,9 +57,13 @@
   <div class="pagination">
     {% if offers.prev_page %}
       <a href="?page={{ offers.prev_page }}">Previous</a>
+    {% else %}
+      <a aria-current="page" href="?page={{ offers.prev_page }}">Previous</a>
     {% endif %}
     {% if offers.next_page %}
       <a href="?page={{ offers.next_page }}">Next</a>
+    {% else %}
+      <a aria-current="page" href="?page={{ offers.next_page }}">Next</a>
     {% endif %}
   </div>
 

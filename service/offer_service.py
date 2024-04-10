@@ -24,16 +24,12 @@ class OfferService:
             page: int = 1,
             page_limit: int = 50,
             query: str = None,
-            checked: bool = None,
-            unchecked: bool = None,
             sort_by: OfferSortEnum = OfferSortEnum.NEWEST
     ) -> OfferListOutput:
         return self.repository.get_all(
             page,
             page_limit,
             query,
-            checked,
-            unchecked,
             sort_by
         )
 
