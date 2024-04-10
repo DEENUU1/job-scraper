@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job scraper</title>
+    <link href="{{ url_for('static', path='/get_all.css')}}" rel="stylesheet">
+</head>
+<body>
+
+    <form method="get" action="/">
+        <input type="text" name="query" placeholder="Search...">
+        <label><input type="checkbox" name="checked"> Checked</label>
+        <label><input type="checkbox" name="unchecked"> Unchecked</label>
+        <select name="sort_by">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <!-- Add other sorting options as needed -->
+        </select>
+        <button type="submit">Apply Filters</button>
+      </form>
+
+
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Check</th>
+        <th>Title</th>
+        <th>Website</th>
+        <th>Created at</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for offer in offers %}
+        <tr>
+          <td><input type="checkbox" value="{{offer.check}}"></td>
+          <td><a href="{{offer.url}}">{{ offer.title }}</a></td>
+          <td>{{ offer.page }}</td>
+          <td>{{ offer.created_at }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+</body>
+</html>

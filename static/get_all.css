@@ -1,0 +1,48 @@
+/* General Table Style */
+#data {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header Row */
+#data thead {
+  background-color: #f2f2f2;
+}
+
+/* Header Cells */
+#data th {
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
+/* Body Rows */
+#data tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Body Cells */
+#data td {
+  padding: 10px;
+}
+
+/* Links inside Cells */
+#data a {
+  text-decoration: none;
+  color: #337ab7; /* Change color as per your design */
+}
+
+/* Hover Effect on Rows */
+#data tbody tr:hover {
+  background-color: #ddd;
+}
+
+/* Checkbox Alignment */
+#data input[type="checkbox"] {
+  vertical-align: middle;
+}
+
+/* Table Striped Style */
+.table-striped tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* Change as per your design */
+}

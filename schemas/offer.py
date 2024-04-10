@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class Offer(BaseModel):
@@ -19,4 +20,4 @@ class OfferOutput(BaseModel):
     url: str
     page: str
     check: bool = False
-    created_at: str
+    created_at: datetime

@@ -49,10 +49,10 @@ class OfferRepository:
             offers = offers.filter(OfferModel.title.like(f'%{query}%'))
 
         if checked is not None:
-            offers = offers.filter(OfferModel.checked == checked)
+            offers = offers.filter(OfferModel.check == checked)
 
         if unchecked is not None:
-            offers = offers.filter(OfferModel.checked == unchecked)
+            offers = offers.filter(OfferModel.check == unchecked)
 
         if sort_by == OfferSortEnum.NEWEST:
             offers = offers.order_by(desc(OfferModel.created_at))
