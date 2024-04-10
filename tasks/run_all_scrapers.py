@@ -74,5 +74,8 @@ def run_all_scraper(
 
                 gs.add_data(data=offer, website=website)
 
+            elif export_type == "db":
+                pass
+
             else:
                 raise ValueError("Invalid export type")
