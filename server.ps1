@@ -10,9 +10,9 @@ if (Test-Path $venvPath) {
     exit 1
 }
 
-$pythonScript = "uvicorn server:app"
+$pythonScript = "server.py"
 if (Test-Path $pythonScript) {
-    Write-Host "Running local server..."
+    Write-Host "Running Python script..."
     python $pythonScript
 } else {
     Write-Host "Python script 'server.py' not found."

@@ -214,7 +214,7 @@ python main.py
 
 #### If you set "db" in your config file you can run local server
 ```bash
-uvicorn server:app
+python server.py
 
 # On windows you can run 'server.ps1' powershell script
 ```

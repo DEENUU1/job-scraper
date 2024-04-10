@@ -64,3 +64,8 @@ def get_all(
             "offers": offers
         }
     )
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app)
