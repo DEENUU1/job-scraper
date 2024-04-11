@@ -82,7 +82,7 @@ class OfferRepository:
             page: int = 1,
             page_limit: int = 50,
             query: str = None,
-            sort_by: str = "newest"
+            # sort_by: str = "newest"
     ) -> OfferListOutput:
         """
         Retrieves a paginated list of offers with filtering and sorting options.
@@ -105,10 +105,7 @@ class OfferRepository:
         if query is not None:
             offers = offers.filter(OfferModel.title.like(f'%{query}%'))
 
-        if sort_by == "newest":
-            offers = offers.order_by(desc(OfferModel.created_at))
-        elif sort_by == "oldest":
-            offers = offers.order_by(asc(OfferModel.created_at))
+        offers = offers.order_by(desc(OfferModel.created_at))
 
         total_offers = total_offers_query.scalar()
 
@@ -126,5 +123,5 @@ class OfferRepository:
             prev_page=prev_page,
             next_page=next_page,
             query=query,
-            sort_by=sort_by,
+            # sort_by=sort_by,
         )

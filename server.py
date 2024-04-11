@@ -16,7 +16,6 @@ from sqlalchemy.orm import Session
 from service.offer_service import OfferService
 from config.database import get_db
 from typing import Optional
-from enums.sort_by import OfferSortEnum
 from schemas.offer_status import OfferStatusUpdate
 
 
@@ -45,7 +44,7 @@ def get_all(
         page: int = Query(1),
         page_limit: int = Query(50),
         query: Optional[str] = Query(None),
-        sort_by: str = Query("newest")
+        # sort_by: str = Query("newest")
 ):
 
     offer_service = OfferService(session)
@@ -54,14 +53,14 @@ def get_all(
         page=page,
         page_limit=page_limit,
         query=query,
-        sort_by=sort_by
+        # sort_by=sort_by
     )
 
     return templates.TemplateResponse(
         request=request,
         name="get_all.html",
         context={
-            "offers": offers
+            "offers": offers,
         }
     )
 
