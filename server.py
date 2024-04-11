@@ -45,7 +45,7 @@ def get_all(
         page: int = Query(1),
         page_limit: int = Query(50),
         query: Optional[str] = Query(None),
-        sort_by: OfferSortEnum = OfferSortEnum.NEWEST
+        sort_by: str = Query("newest")
 ):
 
     offer_service = OfferService(session)

@@ -41,7 +41,7 @@ class OfferService:
             page: int = 1,
             page_limit: int = 50,
             query: str = None,
-            sort_by: OfferSortEnum = OfferSortEnum.NEWEST
+            sort_by: str = "newest"
     ) -> OfferListOutput:
         """
         Retrieves a paginated list of offers with filtering and sorting options using the OfferRepository.

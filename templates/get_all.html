@@ -18,18 +18,19 @@
         <button type="submit">Apply Filters</button>
     </form>
 
-    <div class="pagination">
-      {% if offers.prev_page %}
-        <a href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Previous</a>
-      {% else %}
-        <a aria-current="page" href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Previous</a>
-      {% endif %}
-      {% if offers.next_page %}
-        <a href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Next</a>
-      {% else %}
-        <a aria-current="page" href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Next</a>
-      {% endif %}
-    </div>
+<div class="pagination">
+  {% if offers.prev_page %}
+    <a href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Previous</a>
+  {% else %}
+    <a aria-current="page" href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Previous</a>
+  {% endif %}
+  {% if offers.next_page %}
+    <a href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Next</a>
+  {% else %}
+    <a aria-current="page" href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&sort_by={{ request.query_params.sort_by }}">Next</a>
+  {% endif %}
+</div>
+
 
 
 <table id="data" class="table table-striped">
