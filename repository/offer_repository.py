@@ -124,5 +124,7 @@ class OfferRepository:
         return OfferListOutput(
             offers=offers_list,
             prev_page=prev_page,
-            next_page=next_page
+            next_page=next_page,
+            query=query,
+            sort_by=sort_by,
         )

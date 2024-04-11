@@ -50,3 +50,5 @@ class OfferListOutput(BaseModel):
     offers: list[OfferOutput]
     prev_page: Optional[int] = None
     next_page: Optional[int] = None
+    query: Optional[str] = None
+    sort_by: Optional[str] = None
