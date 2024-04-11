@@ -154,8 +154,13 @@ https://useme.com/pl/jobs/category/serwisy-internetowe,34/sklepy-internetowe,97/
   - Requests
   - BeautifulSoup4
   - Selenium
+  - FastAPI
 - Docker 
 - Google Sheet
+- Powershell
+- SQLite
+- Javascript
+- HTML & CSS
 
 ## Installation
 
