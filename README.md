@@ -109,6 +109,8 @@ https://nofluffjobs.com/pl # valid
 https://nofluffjobs.com/pl/.NET?page=1&criteria=seniority%3Dtrainee,junior # valid
 ```
 
+If script looped, please check this issue https://github.com/DEENUU1/job-scraper/issues/2
+
 </details>
 <details>
 <summary><a href="https://www.olx.pl/praca/">olx</a></summary>
