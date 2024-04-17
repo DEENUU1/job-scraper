@@ -54,10 +54,13 @@ class Indeed(ScraperStrategy):
         full_url = f"indeed.com{offer_url.get("href")}"
         processed_url = self.process_url(full_url)
 
+        if processed_url is None:
+            return None
+
         if max_offer_duration_days and not self.check_date(offer, max_offer_duration_days):
             return None
 
-        return Offer(url=processed_url, title=title.text)
+        return Offer(url=str(processed_url), title=str(title.text))
 
     @staticmethod
     def process_url(url: str) -> str:

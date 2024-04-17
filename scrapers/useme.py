@@ -46,17 +46,19 @@ class Useme(ScraperStrategy):
         Returns:
             Optional[Offer]: Parsed job offer input.
         """
-        title = job.find("h2", class_="job__title")
-        offer_url = job.find("a", class_="job__title-link")
+        # title = job.find("h2", class_="job__title")
+        # offer_url = job.find("a", class_="job__title-link")
+        job_content_div = job.find("div", class_="job__content")
+        a_tag = job_content_div.find("a")
 
-        if not title or not offer_url:
+        if not a_tag:
             return None
 
         if max_offer_duration_days and not self.check_date(job, max_offer_duration_days):
             return None
 
-        full_offer_url = f"useme.com{offer_url.get("href")}"
-        return Offer(title=title.text, url=full_offer_url)
+        full_offer_url = f"https://useme.com{a_tag.get("href")}"
+        return Offer(title=a_tag.text, url=full_offer_url)
 
     @staticmethod
     def get_next_page_url(soup, base_url) -> Optional[str]:
@@ -87,7 +89,7 @@ class Useme(ScraperStrategy):
 
             soup = BeautifulSoup(response.text, "html.parser")
 
-            jobs_div = soup.find_all("div", class_="job")
+            jobs_div = soup.find_all("article", class_="job")
             print(f"Found {len(jobs_div)} jobs")
 
             for job in jobs_div:
