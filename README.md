@@ -22,7 +22,7 @@
 </div>
 
 <img src="assets/gs.png" alt="google_sheet_results">
-<img src="assets/server.png" alt="local_server">
+<img src="assets/server2.png" alt="local_server">
 
 ## Features
 
@@ -194,7 +194,17 @@ git clone https://github.com/DEENUU1/job-scraper.git
 - `keywords_to_pass` List of keywords after which offers are to be skipped
 - `export_type` Here you can type "excel", "googlesheet" or "db" if you choose "excel" data will be saved locally in .xlsx file, if you want to save data in Google Sheet choose "googlesheet" and if you want to use SQLite database + local web application to browse and filter data choose "db"
 - `max_offer_duration_days` you can set here null or some integer number (for example 5) If the value is an integer, offers downloaded from websites will not be older than the number of days you specify
-- `websites` here you can add multiple urls from which you want to scrape job offers
+- `websites` here you can add multiple urls from which you want to scrape job offers, each website can have tag (string) to facilitate subsequent filtering of offers.
+```json
+    {
+      "url": "https://pl.indeed.com/praca?l=Zdu%C5%84ska+Wola%2C+%C5%82%C3%B3dzkie&radius=10&sort=date&vjk=adc0ec0fd20bd577",
+      "tag": "Zduńska Wola"
+    },
+    {
+      "url": "https://pl.indeed.com/jobs?q=python&sort=date&fromage=3&vjk=a986e0ad45696cf8",
+      "tag": "IT"
+    },
+```
 
 #### `urls_to_skip.txt` set up **(Optional)**
 Here you can add links for job offers that should be skipped and not added to your Google Sheet document
