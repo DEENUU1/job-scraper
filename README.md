@@ -212,6 +212,12 @@ https://www.pracuj.pl/praca/junior-devops-engineer-z-chmura-gcp-warszawa,oferta,
 pip install -r requirements.txt
 ```
 
+#### Migrations (Optional)
+If you choose "db" as an export type apply migrations
+```bash
+alembic upgrade head
+```
+
 #### Run scrapers
 ```bash
 python main.py
