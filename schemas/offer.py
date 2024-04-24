@@ -35,7 +35,7 @@ class OfferOutput(BaseModel):
     page: str
     check: bool = False
     created_at: datetime
-    tag: str
+    tag: Optional[str] = None
 
 
 class OfferListOutput(BaseModel):
