@@ -1,3 +1,5 @@
+from typing import Optional, List
+
 from sqlalchemy.orm import Session
 
 from enums.sort_by import OfferSortEnum
@@ -5,6 +7,8 @@ from repository.offer_repository import OfferRepository
 from schemas.offer import Offer, OfferListOutput
 
 from fastapi import HTTPException
+
+from schemas.tag import TagOutput
 
 
 class OfferService:
@@ -17,7 +21,7 @@ class OfferService:
         """
         self.repository = OfferRepository(session)
 
-    def create(self, data: Offer, website: str) -> None:
+    def create(self, data: Offer, website: str, tag: Optional[str]) -> None:
         """
         Creates a new offer in the database, checking for duplicates first.
 
@@ -32,7 +36,7 @@ class OfferService:
             print("Offer exists in database")
             return
 
-        self.repository.create(data, website)
+        self.repository.create(data, website, tag)
         print("Offer created")
         return
 
@@ -41,7 +45,7 @@ class OfferService:
             page: int = 1,
             page_limit: int = 50,
             query: str = None,
-            # sort_by: str = "newest"
+            tag: Optional[str] = None,
     ) -> OfferListOutput:
         """
         Retrieves a paginated list of offers with filtering and sorting options using the OfferRepository.
@@ -60,7 +64,7 @@ class OfferService:
             page,
             page_limit,
             query,
-            # sort_by
+            tag
         )
 
     def change_check_status(self, _id: int, status: bool) -> bool:
@@ -78,3 +82,14 @@ class OfferService:
             raise HTTPException(status_code=404, detail="Offer not found")
 
         return self.repository.change_check_status(_id, status)
+
+    def get_unique_tags(self) -> List[TagOutput]:
+        """
+        Retrieves a list of unique tags from the OfferRepository.
+
+        Returns:
+            List[str]: A list of unique tags.
+        """
+        return self.repository.get_unique_tags()
+
+

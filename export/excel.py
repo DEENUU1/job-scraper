@@ -1,3 +1,5 @@
+from typing import Optional
+
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
@@ -56,19 +58,21 @@ class ExcelWriter:
         """
         return ord(column_letter.upper()) - 64
 
-    def add_data(self, data: Offer, website: str) -> None:
+    def add_data(self, data: Offer, website: str, tag: Optional[str]) -> None:
         """Add data to the Excel file.
 
         Args:
             data (Offer): The offer data to add.
             website (str): The website associated with the offer.
+            tag (str): The tag associated with the offer.
         """
         next_row = self.sheet.max_row + 1
         row_data = [
             data.title,
             data.url,
             website,
-            str(get_current_date())
+            str(get_current_date()),
+            tag
         ]
         for idx, value in enumerate(row_data, start=1):
             self.sheet.cell(row=next_row, column=idx, value=value)

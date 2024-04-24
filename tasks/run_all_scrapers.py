@@ -1,5 +1,5 @@
 import time
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from config.database import get_db
 from export.googlesheet import GoogleSheet
@@ -12,7 +12,7 @@ from service.offer_service import OfferService
 
 
 def run_all_scraper(
-        websites: List[Optional[str]],
+        websites: List[Optional[Dict[str, str]]],
         worksheet_url: str,
         export_type: str = "excel",  # or 'googlesheet' or 'db'
         max_offer_duration_days: Optional[int] = None,
@@ -36,7 +36,10 @@ def run_all_scraper(
         print("No websites to scrape")
         return
 
-    for url in websites:
+    for data in websites:
+        url = data.get("url")
+        tag = data.get("tag")
+
         offer_service = None
         if export_type == "db":
             offer_service = OfferService(next(get_db()))
@@ -64,7 +67,7 @@ def run_all_scraper(
                     print("Offer exists in excel")
                     continue
 
-                ew.add_data(data=offer, website=website)
+                ew.add_data(data=offer, website=website, tag=tag)
                 ew.save()
 
             # Save data to Google Sheet
@@ -81,12 +84,12 @@ def run_all_scraper(
                 # Rate limit Google Sheet API (60 requests per minute)
                 time.sleep(2)
 
-                gs.add_data(data=offer, website=website)
+                gs.add_data(data=offer, website=website, tag=tag)
 
             # Save data to SQLite database
             # Then you are able to run local server based on FastAPI and Jinja Template
             elif export_type == "db" and offer_service:
-                offer_service.create(offer, website)
+                offer_service.create(data=offer, website=website, tag=tag)
 
             else:
                 raise ValueError("Invalid export type")

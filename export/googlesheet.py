@@ -1,3 +1,5 @@
+from typing import Optional
+
 import gspread
 from utils.get_current_date import get_current_date
 from schemas.offer import Offer
@@ -54,19 +56,21 @@ class GoogleSheet:
             print(e)
             return False
 
-    def add_data(self, data: Offer, website: str) -> None:
+    def add_data(self, data: Offer, website: str, tag: Optional[str]) -> None:
         """Add data to the Google Sheet.
 
         Args:
             data (Offer): The offer data to add.
             website (str): The website associated with the offer.
+            tag (str): The tag associated with the offer.
         """
         try:
             row_data = [
                 data.title,
                 data.url,
                 website,
-                str(get_current_date())
+                str(get_current_date()),
+                tag
             ]
             self.get_sheet().insert_row(row_data, index=2)
             print("Save data to Google Sheet")

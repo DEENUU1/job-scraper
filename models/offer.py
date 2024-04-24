@@ -11,4 +11,5 @@ class Offer(Base):
     url = Column(String, nullable=False, unique=True)
     page = Column(String, nullable=False)
     check = Column(Boolean, default=False)
+    tag = Column(String, nullable=True)
     created_at = Column(DateTime, default=func.now())

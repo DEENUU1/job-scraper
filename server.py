@@ -44,7 +44,7 @@ def get_all(
         page: int = Query(1),
         page_limit: int = Query(50),
         query: Optional[str] = Query(None),
-        # sort_by: str = Query("newest")
+        tag: Optional[str] = Query(None),
 ):
 
     offer_service = OfferService(session)
@@ -53,14 +53,17 @@ def get_all(
         page=page,
         page_limit=page_limit,
         query=query,
-        # sort_by=sort_by
+        tag=tag,
     )
+
+    tags = offer_service.get_unique_tags()
 
     return templates.TemplateResponse(
         request=request,
         name="get_all.html",
         context={
             "offers": offers,
+            "tags": tags,
         }
     )
 

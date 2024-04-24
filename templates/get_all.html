@@ -11,23 +11,27 @@
 
     <form method="get" action="/">
         <input type="text" name="query" placeholder="Search...">
-<!--        <select name="sort_by">-->
-<!--          <option value="newest">Newest</option>-->
-<!--          <option value="oldest">Oldest</option>-->
-<!--        </select>-->
+        <select name="tag">
+            <option value="all">All</option>
+            {% if tags %}
+                {% for tag in tags %}
+                    <option value="{{tag.name}}">{{tag.name}}</option>
+                {% endfor %}
+            {% endif %}
+        </select>
         <button type="submit">Apply Filters</button>
     </form>
 
 <div class="pagination">
   {% if offers.prev_page %}
-    <a href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}">Previous</a>
+    <a href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Previous</a>
   {% else %}
-    <a aria-current="page" href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}">Previous</a>
+    <a aria-current="page" href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Previous</a>
   {% endif %}
   {% if offers.next_page %}
-    <a href="?page={{ offers.next_page }}&query={{ request.query_params.query }}">Next</a>
+    <a href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Next</a>
   {% else %}
-    <a aria-current="page" href="?page={{ offers.next_page }}&query={{ request.query_params.query }}">Next</a>
+    <a aria-current="page" href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Next</a>
   {% endif %}
 </div>
 
@@ -41,6 +45,7 @@
             </th>
             <th>Title</th>
             <th>Website</th>
+            <th>Tag</th>
             <th>Created at</th>
         </tr>
     </thead>
@@ -53,6 +58,7 @@
             </td>
             <td><a href="{{offer.url}}">{{ offer.title }}</a></td>
             <td>{{ offer.page }}</td>
+            <td>{{ offer.tag }}</td>
             <td>{{ offer.created_at }}</td>
         </tr>
         {% endfor %}
@@ -62,14 +68,14 @@
 
 <div class="pagination">
   {% if offers.prev_page %}
-    <a href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}">Previous</a>
+    <a href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Previous</a>
   {% else %}
-    <a aria-current="page" href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}">Previous</a>
+    <a aria-current="page" href="?page={{ offers.prev_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Previous</a>
   {% endif %}
   {% if offers.next_page %}
-    <a href="?page={{ offers.next_page }}&query={{ request.query_params.query }}">Next</a>
+    <a href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Next</a>
   {% else %}
-    <a aria-current="page" href="?page={{ offers.next_page }}&query={{ request.query_params.query }}">Next</a>
+    <a aria-current="page" href="?page={{ offers.next_page }}&query={{ request.query_params.query }}&tag={{request.query_params.tag}}">Next</a>
   {% endif %}
 </div>
 

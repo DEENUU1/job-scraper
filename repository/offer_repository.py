@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 from sqlalchemy.orm import Session
 from models.offer import Offer as OfferModel
 from schemas.offer import Offer, OfferOutput, OfferListOutput
-from enums.sort_by import OfferSortEnum
 from sqlalchemy import asc, desc, func
+from schemas.tag import TagOutput
 
 
 class OfferRepository:
@@ -17,7 +17,7 @@ class OfferRepository:
         """
         self.session = session
 
-    def create(self, data: Offer, website: str) -> None:
+    def create(self, data: Offer, website: str, tag: Optional[str]) -> None:
         """
         Creates a new offer in the database.
 
@@ -29,7 +29,8 @@ class OfferRepository:
             title=data.title,
             url=data.url,
             page=website,
-            check=False
+            check=False,
+            tag=tag
         )
         self.session.add(db_offer)
         self.session.commit()
@@ -77,12 +78,16 @@ class OfferRepository:
         self.session.refresh(db_offer)
         return True
 
+    def get_unique_tags(self) -> List[TagOutput]:
+        unique_tags = self.session.query(OfferModel.tag).distinct().all()
+        return [TagOutput(name=tag[0]) for tag in unique_tags]
+
     def get_all(
             self,
             page: int = 1,
             page_limit: int = 50,
             query: str = None,
-            # sort_by: str = "newest"
+            tag: Optional[str] = None
     ) -> OfferListOutput:
         """
         Retrieves a paginated list of offers with filtering and sorting options.
@@ -105,6 +110,9 @@ class OfferRepository:
         if query is not None:
             offers = offers.filter(OfferModel.title.like(f'%{query}%'))
 
+        if tag is not None and tag != "all":
+            offers = offers.filter(OfferModel.tag == tag)
+
         offers = offers.order_by(desc(OfferModel.created_at))
 
         total_offers = total_offers_query.scalar()
@@ -123,5 +131,4 @@ class OfferRepository:
             prev_page=prev_page,
             next_page=next_page,
             query=query,
-            # sort_by=sort_by,
         )
