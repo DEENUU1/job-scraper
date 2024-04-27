@@ -51,7 +51,7 @@ class Indeed(ScraperStrategy):
         if title is None:
             return None
 
-        full_url = f"indeed.com{offer_url.get("href")}"
+        full_url = f"https://indeed.com{offer_url.get("href")}"
         processed_url = self.process_url(full_url)
 
         if processed_url is None:

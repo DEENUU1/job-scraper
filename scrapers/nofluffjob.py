@@ -109,7 +109,7 @@ class Nofluffjob(ScraperStrategy):
                 continue
 
             unique_urls.append(url)
-            full_url = f"nofluffjobs.com{url}"
+            full_url = f"https://nofluffjobs.com{url}"
             offers.append(Offer(title=title.text, url=full_url))
 
         return offers

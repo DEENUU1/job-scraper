@@ -33,11 +33,12 @@ class OfferService:
             None
         """
         if self.repository.offer_exists_by_url(data.url):
+            print(data.url)
             print("Offer exists in database")
             return
 
-        self.repository.create(data, website, tag)
-        print("Offer created")
+        # self.repository.create(data, website, tag)
+        # print("Offer created")
         return
 
     def get_all(

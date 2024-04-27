@@ -110,7 +110,7 @@ class JustJoinIT(ScraperStrategy):
                 continue
 
             unique_urls.append(url)
-            full_url = f"justjoin.it{url}"
+            full_url = f"https://justjoin.it{url}"
             offers.append(Offer(title=title, url=full_url))
 
         return offers

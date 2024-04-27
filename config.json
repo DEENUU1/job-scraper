@@ -9,6 +9,30 @@
   "export_type": "db",
   "websites": [
     {
+      "url": "https://pl.jooble.org/SearchResult?date=3&p=10000&ukw=python",
+      "tag": "IT"
+    },
+    {
+      "url": "https://pl.indeed.com/praca?l=Zdu%C5%84ska+Wola%2C+%C5%82%C3%B3dzkie&radius=10&sort=date&vjk=adc0ec0fd20bd577",
+      "tag": "Zduńska Wola"
+    },
+    {
+      "url": "https://pl.indeed.com/jobs?q=python&sort=date&fromage=3&vjk=a986e0ad45696cf8",
+      "tag": "IT"
+    },
+    {
+      "url": "https://pl.jooble.org/SearchResult?date=2&loc=8&p=2&rgns=Zdu%C5%84ska%20Wola%2C%20%C5%81%C3%B3dzkie",
+      "tag": "Zduńska Wola"
+    },
+    {
+      "url": "https://useme.com/pl/jobs/category/programowanie-i-it,35/",
+      "tag": "zlecenia"
+    },
+        {
+      "url": "https://www.olx.pl/api/v1/offers?offset=0&limit=40&category_id=4&region_id=7&city_id=10609&sort_by=created_at%3Adesc&filter_refiners=spell_checker&sl=18c34ade124x23bc10a5",
+      "tag": "Łódź"
+    },
+    {
       "url": "https://www.olx.pl/api/v1/offers?offset=0&limit=40&category_id=4&region_id=7&city_id=41415&distance=10&sort_by=created_at%3Adesc&filter_refiners=spell_checker&sl=18c34ade124x23bc10a5",
       "tag": "Zduńska Wola"
     },
@@ -37,10 +61,6 @@
       "tag": "IT"
     },
     {
-      "url": "https://pl.jooble.org/SearchResult?date=3&p=10000&ukw=python",
-      "tag": "IT"
-    },
-    {
       "url": "https://nofluffjobs.com/pl/Python?criteria=seniority%3Dtrainee,junior&page=1&sort=newest",
       "tag": "IT"
     },
@@ -63,22 +83,6 @@
     {
       "url": "https://www.olx.pl/api/v1/offers?category_id=0&excluded_category_id=4&filter_refiners=spell_checker&limit=40&offset=0&query=python&sl=18c34ade124x23bc10a5&strategy=cse&suggest_filters=true",
       "tag": "IT"
-    },
-    {
-      "url": "https://pl.indeed.com/praca?l=Zdu%C5%84ska+Wola%2C+%C5%82%C3%B3dzkie&radius=10&sort=date&vjk=adc0ec0fd20bd577",
-      "tag": "Zduńska Wola"
-    },
-    {
-      "url": "https://pl.indeed.com/jobs?q=python&sort=date&fromage=3&vjk=a986e0ad45696cf8",
-      "tag": "IT"
-    },
-    {
-      "url": "https://pl.jooble.org/SearchResult?date=2&loc=8&p=2&rgns=Zdu%C5%84ska%20Wola%2C%20%C5%81%C3%B3dzkie",
-      "tag": "Zduńska Wola"
-    },
-    {
-      "url": "https://useme.com/pl/jobs/category/programowanie-i-it,35/",
-      "tag": "zlecenia"
     }
   ]
 }
