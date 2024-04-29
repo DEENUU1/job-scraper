@@ -24,7 +24,7 @@ class ITPracujPL(PracujPlBase):
         parsed_offers = []
 
         soup = BeautifulSoup(content, "html.parser")
-        offers = soup.find_all("div", class_="be8lukl")
+        offers = soup.find_all("div", class_="tiles_b1j1pbod")
         print(f"Found {len(offers)} offers")
 
         for offer in offers:
