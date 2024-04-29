@@ -37,8 +37,8 @@ class OfferService:
             print("Offer exists in database")
             return
 
-        # self.repository.create(data, website, tag)
-        # print("Offer created")
+        self.repository.create(data, website, tag)
+        print("Offer created")
         return
 
     def get_all(
